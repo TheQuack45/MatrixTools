@@ -10,6 +10,10 @@ namespace MatrixTools.Tests
     {
         static void Main(string[] args)
         {
+            CostFunctionTest.TestCostFunction();
+
+            Console.WriteLine("");
+
             DeclarationTest.TestDeclaration();
 
             Console.WriteLine("");

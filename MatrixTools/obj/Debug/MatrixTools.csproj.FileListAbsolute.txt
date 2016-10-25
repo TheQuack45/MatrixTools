@@ -3,3 +3,8 @@ E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools\bin\Debug\MatrixTools.pdb
 E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools\obj\Debug\MatrixTools.csprojResolveAssemblyReference.cache
 E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools\obj\Debug\MatrixTools.dll
 E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools\obj\Debug\MatrixTools.pdb
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools\bin\Debug\MatrixTools.dll
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools\bin\Debug\MatrixTools.pdb
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools\obj\Debug\MatrixTools.csprojResolveAssemblyReference.cache
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools\obj\Debug\MatrixTools.dll
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools\obj\Debug\MatrixTools.pdb

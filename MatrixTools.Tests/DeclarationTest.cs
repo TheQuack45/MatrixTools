@@ -44,6 +44,17 @@ namespace MatrixTools.Tests
             Assert.AreEqual(firstColumn.Rows, testMatrix.GetColumn(0).Rows);
             Assert.AreEqual(firstColumn.Columns, testMatrix.GetColumn(0).Columns);
             Console.WriteLine("GetColumn is valid.");
+
+            Matrix eye2 = Matrix.IdentityMatrix(2);
+            Assert.AreEqual(2, eye2.Rows);
+            Assert.AreEqual(2, eye2.Columns);
+            Assert.AreEqual(1, eye2[0, 0]);
+            Assert.AreEqual(0, eye2[0, 1]);
+            Assert.AreEqual(0, eye2[1, 0]);
+            Assert.AreEqual(1, eye2[1, 1]);
+            Console.WriteLine("Matrix.IdentityMatrix is valid.");
+            Assert.AreEqual(eye2, Matrix.eye(2));
+            Console.WriteLine("Matrix.eye is valid.");
         }
     }
 }

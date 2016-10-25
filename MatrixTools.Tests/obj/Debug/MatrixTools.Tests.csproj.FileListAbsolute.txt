@@ -8,3 +8,13 @@ E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\nunit.fra
 E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\obj\Debug\MatrixTools.Tests.csprojResolveAssemblyReference.cache
 E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\obj\Debug\MatrixTools.Tests.exe
 E:\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\obj\Debug\MatrixTools.Tests.pdb
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\MatrixTools.Tests.exe.config
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\obj\Debug\MatrixTools.Tests.exe
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\obj\Debug\MatrixTools.Tests.pdb
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\MatrixTools.Tests.exe
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\MatrixTools.Tests.pdb
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\MatrixTools.dll
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\nunit.framework.dll
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\MatrixTools.pdb
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\bin\Debug\nunit.framework.xml
+C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Tests\obj\Debug\MatrixTools.Tests.csprojResolveAssemblyReference.cache

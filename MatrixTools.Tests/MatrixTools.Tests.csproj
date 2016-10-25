@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CostFunctionTest.cs" />
     <Compile Include="DeclarationTest.cs" />
+    <Compile Include="OperationsTest.cs" />
     <Compile Include="OperatorsTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

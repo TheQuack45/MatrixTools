@@ -10,7 +10,7 @@ namespace MatrixTools
     public class Matrix : IEnumerable<double>
     {
         #region Members definition
-        private double[,] _innerMatrix;
+        protected double[,] _innerMatrix;
         protected double[,] InnerMatrix
         {
             get { return _innerMatrix; }
@@ -42,6 +42,11 @@ namespace MatrixTools
         {
             get { return this.Columns; }
         }
+
+        public int Size
+        {
+            get { return this.Rows * this.Columns; }
+        }
         #endregion
 
         #region Constructors definition
@@ -49,9 +54,19 @@ namespace MatrixTools
         {
             this._innerMatrix = new double[rows, columns];
         }
+
+        protected Matrix()
+        {
+
+        }
         #endregion
 
-        #region Operator overloading
+        #region Operator overloads
+        #region Cast operators
+        
+        #endregion
+
+        #region Standard operators
         public static Matrix operator +(Matrix m1, double scalar)
         {
             int rows = m1.Rows;
@@ -145,6 +160,12 @@ namespace MatrixTools
             return returnMatrix;
         }
 
+        public static Matrix operator *(Matrix m1, Vector v1)
+        {
+            // TODO: Not done yet!
+            throw new NotImplementedException();
+        }
+
         public static Matrix operator *(Matrix m1, Matrix m2)
         {
             if (m1.Columns == m2.Rows)
@@ -184,9 +205,38 @@ namespace MatrixTools
 
             return returnMatrix;
         }
+
+        public static bool operator ==(Matrix m1, Matrix m2)
+        {
+            if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
+                { return false; }
+
+            for (int i = 0; i < m1.Rows; i++)
+            {
+                for (int j = 0; j < m1.Columns; j++)
+                {
+                    if (m1[i, j] != m2[i, j])
+                        { return false; }
+                }
+            }
+
+            return true;
+        }
+
+        public static bool operator !=(Matrix m1, Matrix m2)
+        {
+            return !(m1 == m2);
+        }
+        #endregion
         #endregion
 
         #region Methods definition
+        /// <summary>
+        /// Gets a 1*1 Matrix containing the element at the specified location.
+        /// </summary>
+        /// <param name="row">Row index to access.</param>
+        /// <param name="column">Column index to access.</param>
+        /// <returns>1*1 Matrix containing the retrieved element.</returns>
         public Matrix Get(int row, int column)
         {
             Matrix returnMatrix = new Matrix(1, 1);
@@ -194,11 +244,22 @@ namespace MatrixTools
             return returnMatrix;
         }
 
+        /// <summary>
+        /// Gets the element at the specified location as a double.
+        /// </summary>
+        /// <param name="row">Row index to access.</param>
+        /// <param name="column">Column index to access.</param>
+        /// <returns>The retrieved element as a double.</returns>
         public double GetAsScalar(int row, int column)
         {
             return this.InnerMatrix[row, column];
         }
 
+        /// <summary>
+        /// Converts this Matrix to a scalar if it is a 1x1 matrix.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if this Matrix is not a 1x1 Matrix.</exception> 
+        /// <returns>The single value from this Matrix as a double.</returns>
         public double ToScalar()
         {
             if (this.Rows == 1 && this.Columns == 1)
@@ -209,30 +270,136 @@ namespace MatrixTools
             throw new InvalidOperationException("You cannot convert a matrix to a scalar when the matrix contains more than one value.");
         }
 
-        public Matrix GetRow(int row)
+        public Vector ToVector()
+        {
+            return Matrix.ToVector(this);
+        }
+
+        public static Vector ToVector(Matrix m1)
+        {
+            if (m1.Rows == 1)
+            {
+                Vector returnVector = new Vector(m1.Columns, Vector.TYPES.RowVector);
+                for (int i = 0; i < returnVector.Size; i++)
+                {
+                    returnVector[i] = m1[0, i];
+                }
+                return returnVector;
+            }
+            else if (m1.Columns == 1)
+            {
+                Vector returnVector = new Vector(m1.Rows, Vector.TYPES.ColumnVector);
+                for (int i = 0; i < returnVector.Size; i++)
+                {
+                    returnVector[i] = m1[i, 0];
+                }
+                return returnVector;
+            }
+            else
+            {
+                throw new ArgumentException("The width and/or height of the given Matrix must be 1 to be converted to a Vector.", nameof(m1));
+            }
+        }
+
+        /// <summary>
+        /// Gets the full row at the specified index as a 1*m Vector.
+        /// </summary>
+        /// <param name="row">Row index to get.</param>
+        /// <returns>1*m Vector of the retrieved row.</returns>
+        public Vector GetRow(int row)
         {
             int columns = this.Columns;
-            Matrix returnMatrix = new Matrix(1, columns);
-            
+            Vector returnVector = new Vector(columns, Vector.TYPES.RowVector);
+
             for (int i = 0; i < columns; i++)
             {
-                returnMatrix[0, i] = this.InnerMatrix[0, i];
+                returnVector[0, i] = this.InnerMatrix[row, i];
+            }
+
+            return returnVector;
+        }
+
+        public Vector GetColumn(int column)
+        {
+            int rows = this.Rows;
+            Vector returnVector = new Vector(rows, Vector.TYPES.ColumnVector);
+
+            for (int i = 0; i < rows; i++)
+            {
+                returnVector[i, 0] = this.InnerMatrix[i, column];
+            }
+
+            return returnVector;
+        }
+
+        public Vector Sum()
+        {
+            return Matrix.Sum(this);
+        }
+
+        public static Vector Sum(Matrix m1)
+        {
+            int rows = m1.Rows;
+            int columns = m1.Columns;
+            Vector returnVector = new Vector(columns, Vector.TYPES.RowVector);
+
+            for (int i = 0; i < columns; i++)
+            {
+                for (int j = 0; j < rows; j++)
+                {
+                    returnVector[i] += m1[j, i];
+                }
+            }
+
+            return returnVector;
+        }
+
+        public static Matrix Power(Matrix m1, double scalar)
+        {
+            int rows = m1.Rows;
+            int columns = m1.Columns;
+
+            Matrix returnMatrix = new Matrix(rows, columns);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    returnMatrix[i, j] = Math.Pow(m1[i, j], scalar);
+                }
             }
 
             return returnMatrix;
         }
 
-        public Matrix GetColumn(int column)
+        public static Matrix pow(Matrix m1, double scalar)
         {
-            int rows = this.Rows;
-            Matrix returnMatrix = new Matrix(rows, 1);
+            return Matrix.Power(m1, scalar);
+        }
 
-            for (int i = 0; i < rows; i++)
+        public static Matrix IdentityMatrix(int size)
+        {
+            Matrix returnMatrix = new Matrix(size, size);
+            for (int i = 0; i < returnMatrix.Rows; i++)
             {
-                returnMatrix[i, 0] = this.InnerMatrix[i, 0];
+                for (int j = 0; j < returnMatrix.Columns; j++)
+                {
+                    if (i == j)
+                    {
+                        returnMatrix[i, j] = 1;
+                    }
+                    else
+                    {
+                        returnMatrix[i, j] = 0;
+                    }
+                }
             }
 
             return returnMatrix;
+        }
+
+        public static Matrix eye(int size)
+        {
+            return Matrix.IdentityMatrix(size);
         }
 
         IEnumerator<double> IEnumerable<double>.GetEnumerator()
