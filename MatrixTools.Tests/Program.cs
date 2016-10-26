@@ -20,6 +20,10 @@ namespace MatrixTools.Tests
 
             OperatorsTest.TestOperators();
 
+            Console.WriteLine("");
+
+            OperationsTest.TestOperations();
+
             Console.WriteLine("Tests successful.");
             Console.ReadKey();
         }

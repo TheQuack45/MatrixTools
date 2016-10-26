@@ -42,7 +42,6 @@
   <ItemGroup>
     <Compile Include="Matrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="VectorOld.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
   <ItemGroup>

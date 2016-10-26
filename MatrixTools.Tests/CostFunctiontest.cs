@@ -32,8 +32,8 @@ namespace MatrixTools.Tests
 
             int m = y.Size;
 
-            Vector predictions = (X * theta).ToVector();
-            Vector sqrErrors = Matrix.Power(predictions - y, 2).ToVector();
+            Vector predictions = X * theta;
+            Vector sqrErrors = Vector.EMPower(predictions - y, 2);
             double sum = Convert.ToInt32(Vector.Sum(sqrErrors));
 
             double J = (1 / (2 * (double)m)) * sum;

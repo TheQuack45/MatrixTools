@@ -47,6 +47,11 @@ namespace MatrixTools
         {
             get { return this.Rows * this.Columns; }
         }
+
+        public bool IsSquare
+        {
+            get { return (this.Rows == this.Columns); }
+        }
         #endregion
 
         #region Constructors definition
@@ -160,10 +165,27 @@ namespace MatrixTools
             return returnMatrix;
         }
 
-        public static Matrix operator *(Matrix m1, Vector v1)
+        public static Vector operator *(Matrix m1, Vector v1)
         {
             // TODO: Not done yet!
-            throw new NotImplementedException();
+            int rows = m1.Rows;
+            int columns = m1.Columns;
+
+            if (columns == v1.Size)
+            {
+                Vector returnVector = new Vector(rows, Vector.TYPES.ColumnVector);
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < columns; j++)
+                    {
+                        returnVector[i] += m1[i, j] * v1[j];
+                    }
+                }
+
+                return returnVector;
+            }
+
+            throw new ArgumentException("The height of the vector must match the width of the Matrix.");
         }
 
         public static Matrix operator *(Matrix m1, Matrix m2)
@@ -267,7 +289,7 @@ namespace MatrixTools
                 return this.InnerMatrix[0, 0];
             }
 
-            throw new InvalidOperationException("You cannot convert a matrix to a scalar when the matrix contains more than one value.");
+            throw new InvalidOperationException("You cannot convert a Matrix to a scalar when the Matrix contains more than one value.");
         }
 
         public Vector ToVector()
@@ -313,7 +335,7 @@ namespace MatrixTools
 
             for (int i = 0; i < columns; i++)
             {
-                returnVector[0, i] = this.InnerMatrix[row, i];
+                returnVector[i] = this.InnerMatrix[row, i];
             }
 
             return returnVector;
@@ -326,7 +348,7 @@ namespace MatrixTools
 
             for (int i = 0; i < rows; i++)
             {
-                returnVector[i, 0] = this.InnerMatrix[i, column];
+                returnVector[i] = this.InnerMatrix[i, column];
             }
 
             return returnVector;
@@ -356,6 +378,21 @@ namespace MatrixTools
 
         public static Matrix Power(Matrix m1, double scalar)
         {
+            if (m1.IsSquare)
+            {
+                for (int i = 0; i < scalar; i++)
+                {
+                    m1 *= m1;
+                }
+
+                return m1;
+            }
+
+            throw new ArgumentException("The given matrix must be square to put it to a power.", nameof(m1));
+        }
+
+        public static Matrix EMPower(Matrix m1, double scalar)
+        {
             int rows = m1.Rows;
             int columns = m1.Columns;
 
@@ -371,35 +408,95 @@ namespace MatrixTools
             return returnMatrix;
         }
 
-        public static Matrix pow(Matrix m1, double scalar)
-        {
-            return Matrix.Power(m1, scalar);
-        }
-
         public static Matrix IdentityMatrix(int size)
         {
-            Matrix returnMatrix = new Matrix(size, size);
-            for (int i = 0; i < returnMatrix.Rows; i++)
+            if (size > 0)
             {
-                for (int j = 0; j < returnMatrix.Columns; j++)
+                Matrix returnMatrix = new Matrix(size, size);
+                for (int i = 0; i < size; i++)
                 {
-                    if (i == j)
+                    for (int j = 0; j < size; j++)
                     {
-                        returnMatrix[i, j] = 1;
-                    }
-                    else
-                    {
-                        returnMatrix[i, j] = 0;
+                        if (i == j)
+                        {
+                            returnMatrix[i, j] = 1;
+                        }
+                        else
+                        {
+                            returnMatrix[i, j] = 0;
+                        }
                     }
                 }
+
+                return returnMatrix;
             }
 
-            return returnMatrix;
+            throw new ArgumentException("The Matrix size must be greater than 0.", nameof(size));
         }
 
         public static Matrix eye(int size)
         {
             return Matrix.IdentityMatrix(size);
+        }
+
+        public static Matrix Zeros(int size)
+        {
+            if (size > 0)
+            {
+                Matrix returnMatrix = new Matrix(size, size);
+                for (int i = 0; i < size; i++)
+                {
+                    for (int j = 0; j < size; j++)
+                    {
+                        returnMatrix[i, j] = 0;
+                    }
+                }
+
+                return returnMatrix;
+            }
+
+            throw new ArgumentException("The Matrix size must be greater than 0.", nameof(size));
+        }
+
+        public static Matrix Ones(int size)
+        {
+            if (size > 0)
+            {
+                Matrix returnMatrix = new Matrix(size, size);
+                for (int i = 0; i < size; i++)
+                {
+                    for (int j = 0; j < size; j++)
+                    {
+                        returnMatrix[i, j] = 1;
+                    }
+                }
+
+                return returnMatrix;
+            }
+
+            throw new ArgumentException("The Matrix size must be greater than 0.", nameof(size));
+        }
+
+        public static Matrix Transpose(Matrix m1)
+        {
+            int rows = m1.Rows;
+            int columns = m1.Columns;
+
+            Matrix transposed = new Matrix(columns, rows);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    transposed[j, i] = m1[i, j];
+                }
+            }
+
+            return transposed;
+        }
+
+        public Matrix Transpose()
+        {
+            return Matrix.Transpose(this);
         }
 
         IEnumerator<double> IEnumerable<double>.GetEnumerator()

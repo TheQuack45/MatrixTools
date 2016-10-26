@@ -81,6 +81,32 @@ namespace MatrixTools
         #endregion
 
         #region Operator overloads
+        #region Casts definitions
+        public static explicit operator Matrix(Vector v1)
+        {
+            Matrix returnMatrix = null;
+            switch (v1.Type)
+            {
+                case TYPES.ColumnVector:
+                    returnMatrix = new Matrix(v1.Size, 1);
+                    for (int i = 0; i < v1.Size; i++)
+                    {
+                        returnMatrix[i, 0] = v1[i];
+                    }
+                    break;
+                case TYPES.RowVector:
+                    returnMatrix = new Matrix(1, v1.Size);
+                    for (int i = 0; i < v1.Size; i++)
+                    {
+                        returnMatrix[0, i] = v1[i];
+                    }
+                    break;
+            }
+            return returnMatrix;
+        }
+        #endregion
+
+        #region Standard operators
         public static Vector operator +(Vector v1, double scalar)
         {
             int size = v1.Size;
@@ -204,8 +230,24 @@ namespace MatrixTools
             return !(v1 == v2);
         }
         #endregion
+        #endregion
 
         #region Methods definition
+        /// <summary>
+        /// Converts this Vector to a scalar if it is a Vector of length 1.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">Thrown if this Vector is not of length 1.</exception> 
+        /// <returns>The single value form this Vector as a double.</returns>
+        public double ToScalar()
+        {
+            if (this.Size == 1)
+            {
+                return this.InnerVector[0];
+            }
+
+            throw new InvalidOperationException("You cannot convert a Vector to a scalar when the Vector contains more than one value.");
+        }
+
         public double Sum()
         {
             return Vector.Sum(this);
@@ -228,6 +270,20 @@ namespace MatrixTools
             return Vector.DotProduct(this, v1);
         }
 
+        public static Vector EMPower(Vector v1, double scalar)
+        {
+            int size = v1.Size;
+            TYPES type = v1.Type;
+
+            Vector returnVector = new Vector(size, type);
+            for (int i = 0; i < size; i++)
+            {
+                returnVector[i] = Math.Pow(v1[i], scalar);
+            }
+
+            return returnVector;
+        }
+
         public static double DotProduct(Vector v1, Vector v2)
         {
             int size = v1.Size;
@@ -248,6 +304,32 @@ namespace MatrixTools
         public static Vector CrossProduct(Vector v1, Vector v2)
         {
             throw new NotImplementedException("Cross product has not been implemented yet.");
+        }
+
+        public static Vector Transpose(Vector v1)
+        {
+            Vector transposed = null;
+            switch (v1.Type)
+            {
+                case TYPES.ColumnVector:
+                    transposed = new Vector(v1.Size, TYPES.RowVector);
+                    break;
+                case TYPES.RowVector:
+                    transposed = new Vector(v1.Size, TYPES.ColumnVector);
+                    break;
+            }
+
+            for (int i = 0; i < v1.Size; i++)
+            {
+                transposed[i] = v1[i];
+            }
+
+            return transposed;
+        }
+
+        public Vector Transpose()
+        {
+            return Vector.Transpose(this);
         }
 
         IEnumerator<double> IEnumerable<double>.GetEnumerator()

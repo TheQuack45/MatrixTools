@@ -21,6 +21,7 @@ namespace MatrixTools.Tests
 
             TestMatrixScalarMultiplication();
             TestMatrixMatrixMultiplication();
+            TestMatrixVectorMultiplication();
 
             TestMatrixScalarDivision();
         }
@@ -202,6 +203,24 @@ namespace MatrixTools.Tests
 
             //Assert.Throws<ArgumentException>(delegate { Matrix productMatrix = testMatrix * invalidMatrix; });
             //Console.WriteLine("Invalid matrix-matrix multiplication is valid.");
+        }
+
+        [Test]
+        public static void TestMatrixVectorMultiplication()
+        {
+            Matrix testMatrix = new Matrix(2, 2);
+            testMatrix[0, 0] = 1;
+            testMatrix[0, 1] = 2;
+            testMatrix[1, 0] = 3;
+            testMatrix[1, 1] = 4;
+            Vector testVector = new Vector(2, Vector.TYPES.ColumnVector);
+            testVector[0] = 2;
+            testVector[1] = 3;
+
+            Vector product = testMatrix * testVector;
+            Assert.AreEqual(product[0], 8);
+            Assert.AreEqual(product[1], 18);
+            Console.WriteLine("Matrix-vector multiplication is valid.");
         }
 
         [Test]
