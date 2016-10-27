@@ -613,6 +613,50 @@ namespace MatrixTools
             return Matrix.Transpose(this);
         }
 
+        public static double Determinant(Matrix m1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static Tuple<Matrix, Matrix> LUDecomposition(Matrix m1)
+        {
+            // TODO: This probably doesn't work.
+            if (m1.IsSquare)
+            {
+                int rows = m1.Rows;
+                Matrix L = Matrix.Zeros(rows);
+                Matrix U = Matrix.IdentityMatrix(rows);
+
+                for (int i = 0; i < rows; i++)
+                {
+                    L[i, 0] = m1[i, 0];
+                    U[i, i] = 1;
+                }
+
+                for (int j = 1; j < rows; j++)
+                {
+                    U[0, j] = m1[0, j] / L[0, 0];
+                }
+
+                for (int i = 1; i < rows; i++)
+                {
+                    for (int j = 1; j < i; j++)
+                    {
+                        L[i, j] = m1[i, j] - (L.GetRow(i) * U.GetColumn(j));
+                    }
+
+                    for (int j = i - 1; j < rows; j++)
+                    {
+                        U[i, j] = (m1[i, j] - (L.GetRow(i) * U.GetColumn(j))) / L[i, i];
+                    }
+                }
+
+                return new Tuple<Matrix, Matrix>(L, U);
+            }
+
+            throw new ArgumentException("The given Matrix must be square to take the LU decomposition.", nameof(m1));
+        }
+
         IEnumerator<double> IEnumerable<double>.GetEnumerator()
         {
             IEnumerator enumerator = this._innerMatrix.GetEnumerator();
