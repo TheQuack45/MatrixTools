@@ -55,14 +55,14 @@ namespace MatrixTools
         #endregion
 
         #region Constructors definition
+        /// <summary>
+        /// Represents a Matrix containing n*m values of type double.
+        /// </summary>
+        /// <param name="rows">Amount of rows in the Matrix.</param>
+        /// <param name="columns">Amount of columns in the Matrix.</param>
         public Matrix(int rows, int columns)
         {
             this._innerMatrix = new double[rows, columns];
-        }
-
-        protected Matrix()
-        {
-
         }
         #endregion
 
@@ -167,7 +167,6 @@ namespace MatrixTools
 
         public static Vector operator *(Matrix m1, Vector v1)
         {
-            // TODO: Not done yet!
             int rows = m1.Rows;
             int columns = m1.Columns;
 
@@ -292,11 +291,20 @@ namespace MatrixTools
             throw new InvalidOperationException("You cannot convert a Matrix to a scalar when the Matrix contains more than one value.");
         }
 
+        /// <summary>
+        /// Converts this Matrix to a Vector.
+        /// </summary>
+        /// <returns>Vector that is equivalent to this Matrix.</returns>
         public Vector ToVector()
         {
             return Matrix.ToVector(this);
         }
 
+        /// <summary>
+        /// Converts the given Matrix to a Vector.
+        /// </summary>
+        /// <param name="m1">Matrix to convert.</param>
+        /// <returns>Vector that is equivalent to the given Matrix.</returns>
         public static Vector ToVector(Matrix m1)
         {
             if (m1.Rows == 1)
@@ -341,6 +349,11 @@ namespace MatrixTools
             return returnVector;
         }
 
+        /// <summary>
+        /// Gets the full column at the specified index as an m*1 Vector.
+        /// </summary>
+        /// <param name="column">Column index to get.</param>
+        /// <returns>m*1 Vector of the retrieved column.</returns>
         public Vector GetColumn(int column)
         {
             int rows = this.Rows;
@@ -354,11 +367,20 @@ namespace MatrixTools
             return returnVector;
         }
 
+        /// <summary>
+        /// Returns a row-Vector containing the sum of each column of this Matrix.
+        /// </summary>
+        /// <returns>Row-Vector with each element containing the sum of this Matrix' corresponding column.</returns>
         public Vector Sum()
         {
             return Matrix.Sum(this);
         }
 
+        /// <summary>
+        /// Returns a row-Vector containing the sum of each column of the given Matrix.
+        /// </summary>
+        /// <param name="m1">Matrix to get the sum of.</param>
+        /// <returns>Row-Vector with each element containing the sum of the given Matrix' corresponding column.</returns>
         public static Vector Sum(Matrix m1)
         {
             int rows = m1.Rows;
@@ -376,6 +398,13 @@ namespace MatrixTools
             return returnVector;
         }
 
+        /// <summary>
+        /// Puts the given square Matrix to the power of the given scalar.
+        /// </summary>
+        /// <param name="m1">Matrix to get the exponentiation of.</param>
+        /// <param name="scalar">Power to put the Matrix to.</param>
+        /// <exception cref="ArgumentException">Thrown if the given Matrix is not a square Matrix.</exception> 
+        /// <returns>The result Matrix of the exponentiation.</returns>
         public static Matrix Power(Matrix m1, double scalar)
         {
             if (m1.IsSquare)
@@ -391,6 +420,12 @@ namespace MatrixTools
             throw new ArgumentException("The given matrix must be square to put it to a power.", nameof(m1));
         }
 
+        /// <summary>
+        /// Element-wise power. Returns the Matrix resulting from raising each element of the given Matrix to the power of the given scalar.
+        /// </summary>
+        /// <param name="m1">Matrix to calculate the element-wise power of.</param>
+        /// <param name="scalar">The number to raise each Matrix element to.</param>
+        /// <returns>Matrix containing the result of the element-wise power calculation.</returns>
         public static Matrix EMPower(Matrix m1, double scalar)
         {
             int rows = m1.Rows;
@@ -408,6 +443,11 @@ namespace MatrixTools
             return returnMatrix;
         }
 
+        /// <summary>
+        /// Returns the identity matrix of the given Matrix size. Equivalent to Matrix.eye.
+        /// </summary>
+        /// <param name="size">The size of the identity matrix to calculate.</param>
+        /// <returns>The identity matrix for the given size.</returns>
         public static Matrix IdentityMatrix(int size)
         {
             if (size > 0)
@@ -434,11 +474,21 @@ namespace MatrixTools
             throw new ArgumentException("The Matrix size must be greater than 0.", nameof(size));
         }
 
+        /// <summary>
+        /// Returns the identity matrix of the given Matrix size. Identical to Matrix.IdentityMatrix. This alternate method name is added due to its use in MATLAB.
+        /// </summary>
+        /// <param name="size">The size of the identity matrix to calculate.</param>
+        /// <returns>The identity matrix for the given size.</returns>
         public static Matrix eye(int size)
         {
             return Matrix.IdentityMatrix(size);
         }
 
+        /// <summary>
+        /// Returns a square Matrix of the given size with each element as a zero.
+        /// </summary>
+        /// <param name="size">Size of the Matrix to produce.</param>
+        /// <returns>Square Matrix of the given size filled with zeroes.</returns>
         public static Matrix Zeros(int size)
         {
             if (size > 0)
@@ -458,6 +508,36 @@ namespace MatrixTools
             throw new ArgumentException("The Matrix size must be greater than 0.", nameof(size));
         }
 
+        /// <summary>
+        /// Returns a Matrix with the given rows and the given columns with each element as a zero.
+        /// </summary>
+        /// <param name="rows">The amount of rows in the produced Matrix.</param>
+        /// <param name="columns">The amount of columns in the produced Matrix.</param>
+        /// <returns>Matrix of the given size filled with zeroes.</returns>
+        public static Matrix Zeros(int rows, int columns)
+        {
+            if (rows <= 0)
+                { throw new ArgumentException("The Matrix height must be greater than 0.", nameof(rows)); }
+            else if (columns <= 0)
+                { throw new ArgumentException("The Matrix width must be greater than 0.", nameof(columns)); }
+
+            Matrix returnMatrix = new Matrix(rows, columns);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    returnMatrix[i, j] = 0;
+                }
+            }
+
+            return returnMatrix;
+        }
+
+        /// <summary>
+        /// Returns a square Matrix of the given size with each element as a one.
+        /// </summary>
+        /// <param name="size">Size of the Matrix to produce.</param>
+        /// <returns>Square Matrix of the given size filled with ones.</returns>
         public static Matrix Ones(int size)
         {
             if (size > 0)
@@ -477,6 +557,36 @@ namespace MatrixTools
             throw new ArgumentException("The Matrix size must be greater than 0.", nameof(size));
         }
 
+        /// <summary>
+        /// Returns a Matrix with the given rows and the given columns with each element as a one.
+        /// </summary>
+        /// <param name="rows">The amount of rows in the produced Matrix.</param>
+        /// <param name="columns">The amount of columns in the produced Matrix.</param>
+        /// <returns>Matrix of the given size filled with ones.</returns>
+        public static Matrix Ones(int rows, int columns)
+        {
+            if (rows <= 0)
+                { throw new ArgumentException("The Matrix height must be greater than 0.", nameof(rows)); }
+            else if (columns <= 0)
+                { throw new ArgumentException("The Matrix width must be greater than 0.", nameof(columns)); }
+
+            Matrix returnMatrix = new Matrix(rows, columns);
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    returnMatrix[i, j] = 1;
+                }
+            }
+
+            return returnMatrix;
+        }
+
+        /// <summary>
+        /// Returns the transposed version of the given Matrix.
+        /// </summary>
+        /// <param name="m1">The Matrix to transpose.</param>
+        /// <returns>Matrix that is the transposed version of the given Matrix.</returns>
         public static Matrix Transpose(Matrix m1)
         {
             int rows = m1.Rows;
@@ -494,6 +604,10 @@ namespace MatrixTools
             return transposed;
         }
 
+        /// <summary>
+        /// Returns the transposed version of this Matrix.
+        /// </summary>
+        /// <returns>Matrix that is the transposed version of this Matrix.</returns>
         public Matrix Transpose()
         {
             return Matrix.Transpose(this);

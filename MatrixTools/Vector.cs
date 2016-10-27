@@ -73,6 +73,11 @@ namespace MatrixTools
         #endregion
 
         #region Constructors definition
+        /// <summary>
+        /// Represents a vector containing m values of type double.
+        /// </summary>
+        /// <param name="size">Length of the Vector.</param>
+        /// <param name="type">Whether the Vector is wide (row vector) or tall (column vector).</param>
         public Vector(int size, TYPES type)
         {
             this._type = type;
@@ -216,7 +221,7 @@ namespace MatrixTools
                 for (int i = 0; i < size; i++)
                 {
                     if (v1[i] != v2[i])
-                        { return false; }
+                    { return false; }
                 }
 
                 return true;
@@ -248,15 +253,24 @@ namespace MatrixTools
             throw new InvalidOperationException("You cannot convert a Vector to a scalar when the Vector contains more than one value.");
         }
 
+        /// <summary>
+        /// Sum every single element in this Vector and return the summed value.
+        /// </summary>
+        /// <returns>Double of the summed values from this Vector.</returns>
         public double Sum()
         {
             return Vector.Sum(this);
         }
 
+        /// <summary>
+        /// Sum every single element in the given Vector and return the summed value.
+        /// </summary>
+        /// <param name="v1">Vector to sum the values of.</param>
+        /// <returns>Double of the summed values from the given Vector.</returns>
         public static double Sum(Vector v1)
         {
             double sum = 0;
-            
+
             for (int i = 0; i < v1.Size; i++)
             {
                 sum += v1[i];
@@ -265,25 +279,22 @@ namespace MatrixTools
             return sum;
         }
 
+        /// <summary>
+        /// Take the dot-product of this Vector and the given Vector and return it.
+        /// </summary>
+        /// <param name="v1">Vector to get the dot product with this instance Vector.</param>
+        /// <returns>Double of the dot-product of this Vector and the given Vector.</returns>
         public double DotProduct(Vector v1)
         {
             return Vector.DotProduct(this, v1);
         }
 
-        public static Vector EMPower(Vector v1, double scalar)
-        {
-            int size = v1.Size;
-            TYPES type = v1.Type;
-
-            Vector returnVector = new Vector(size, type);
-            for (int i = 0; i < size; i++)
-            {
-                returnVector[i] = Math.Pow(v1[i], scalar);
-            }
-
-            return returnVector;
-        }
-
+        /// <summary>
+        /// Take the dot-product of the two given Vectors and return it.
+        /// </summary>
+        /// <param name="v1">First Vector of the dot-product equation.</param>
+        /// <param name="v2">Second Vector of the dot-product equation.</param>
+        /// <returns>Double of the dot-product of the two given Vectors.</returns>
         public static double DotProduct(Vector v1, Vector v2)
         {
             int size = v1.Size;
@@ -301,11 +312,46 @@ namespace MatrixTools
             throw new ArgumentException("The two Vectors must be the same size.");
         }
 
+        /// <summary>
+        /// Take the element-wise power of this Vector and the given scalar. (Put each element in this Vector to the power of the given scalar)
+        /// </summary>
+        /// <param name="scalar">Power to put each element of this Vector to.</param>
+        /// <returns>Vector containing the result of the element-wise exponentiation.</returns>
+        public Vector EMPower(double scalar)
+        {
+            return Vector.EMPower(this, scalar);
+        }
+
+        /// <summary>
+        /// Take the element-wise power of the given Vector and the given scalar. (Put each element in the given Vector to the power of the given scalar)
+        /// </summary>
+        /// <param name="v1">Vector to operate on.</param>
+        /// <param name="scalar">Power to put each element of the given Vector to.</param>
+        /// <returns>Vector containing the result of the element-wise exponentiation.</returns>
+        public static Vector EMPower(Vector v1, double scalar)
+        {
+            int size = v1.Size;
+            TYPES type = v1.Type;
+
+            Vector returnVector = new Vector(size, type);
+            for (int i = 0; i < size; i++)
+            {
+                returnVector[i] = Math.Pow(v1[i], scalar);
+            }
+
+            return returnVector;
+        }
+
         public static Vector CrossProduct(Vector v1, Vector v2)
         {
             throw new NotImplementedException("Cross product has not been implemented yet.");
         }
 
+        /// <summary>
+        /// Returns the transposed version of the given Vector.
+        /// </summary>
+        /// <param name="v1">The Vector to transpose.</param>
+        /// <returns>Vector that is the transposed version of the given Vector.</returns>
         public static Vector Transpose(Vector v1)
         {
             Vector transposed = null;
@@ -327,6 +373,10 @@ namespace MatrixTools
             return transposed;
         }
 
+        /// <summary>
+        /// Returns the transposed version of this Vector.
+        /// </summary>
+        /// <returns>Vector that is the transposed version of this Vector.</returns>
         public Vector Transpose()
         {
             return Vector.Transpose(this);
