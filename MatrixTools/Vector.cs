@@ -382,6 +382,56 @@ namespace MatrixTools
             return Vector.Transpose(this);
         }
 
+        /// <summary>
+        /// If possible, swaps the value at index1 with the value at index2 within this Vector.
+        /// </summary>
+        /// <param name="index1">Integer index of the first element to swap.</param>
+        /// <param name="index2">Integer index of the first element to swap.</param>
+        /// <exception cref="ArgumentException">Thrown if either of the given indices are less than 0, or larger than the size of this Vector.</exception> 
+        public void Swap(int index1, int index2)
+        {
+            Vector.Swap(this, index1, index2);
+        }
+
+        /// <summary>
+        /// If possible, swaps the value at index1 with the value at index2 within the given Vector.
+        /// </summary>
+        /// <param name="v1">Vector to swap elements of.</param>
+        /// <param name="index1">Integer index of the first element to swap.</param>
+        /// <param name="index2">Integer index of the second element to swap.</param>
+        /// <exception cref="ArgumentException">Thrown if either of the given indices are less than 0, or larger than the size of the given Vector.</exception> 
+        public static void Swap(Vector v1, int index1, int index2)
+        {
+            if (index1 < 0)
+            {
+                throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index1));
+            }
+            else if (index2 < 0)
+            {
+                throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index2));
+            }
+            else
+            {
+                int size = v1.Size;
+                if (index1 >= size)
+                {
+                    // index1 too large
+                    throw new ArgumentException("Both indices must be within the size of the given Vector.", nameof(index1));
+                }
+                else if (index2 >= size)
+                {
+                    // index2 too large
+                    throw new ArgumentException("Both indices must be within the size of the given Vector.", nameof(index2));
+                }
+                else
+                {
+                    double tmp = v1[index1];
+                    v1[index1] = v1[index2];
+                    v1[index2] = tmp;
+                }
+            }
+        }
+
         IEnumerator<double> IEnumerable<double>.GetEnumerator()
         {
             IEnumerator enumerator = this._innerVector.GetEnumerator();

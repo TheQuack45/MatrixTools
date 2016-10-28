@@ -613,12 +613,168 @@ namespace MatrixTools
             return Matrix.Transpose(this);
         }
 
+        /// <summary>
+        /// If possible, swaps the row or column at the given index of this Matrix with the given Vector.
+        /// </summary>
+        /// <param name="v1">Vector to swap the row/column of this Matrix with.</param>
+        /// <param name="index">Index of the row/column to swap.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the applicable dimension of the given Matrix does not match the size of the given Vector,
+        /// if the type of the Vector is invalid,
+        /// or if the given index is less than 0.
+        /// </exception> 
+        public void Swap(Vector v1, int index)
+        {
+            Matrix.Swap(this, v1, index);
+        }
+
+        /// <summary>
+        /// If possible, swaps the row or column at the given index of the given Matrix with the given Vector.
+        /// </summary>
+        /// <param name="m1">Matrix to swap a row/column of.</param>
+        /// <param name="v1">Vector to swap the row/column of the given Matrix with.</param>
+        /// <param name="index">Index of the row/column to swap.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the applicable dimension of the given Matrix does not match the size of the given Vector,
+        /// if the type of the Vector is invalid,
+        /// or if the given index is less than 0.
+        /// </exception> 
+        public static void Swap(Matrix m1, Vector v1, int index)
+        {
+            if (index >= 0)
+            {
+                if (v1.Type == Vector.TYPES.ColumnVector)
+                {
+                    int rows = m1.Rows;
+                    if (rows == v1.Size)
+                    {
+                        for (int i = 0; i < rows; i++)
+                        {
+                            m1[i, index] = v1[i];
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("The size of the given Vector must match the applicable dimension of the given Matrix."); 
+                    }
+                } 
+                else if (v1.Type == Vector.TYPES.RowVector)
+                {
+                    int columns = m1.Columns;
+                    if (columns == v1.Size)
+                    {
+                        for (int i = 0; i < columns; i++)
+                        {
+                            m1[index, i] = v1[i];
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("The size of the given Vector must match the applicable dimension of the given Matrix.");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Vector type is invalid.", nameof(v1));
+                }
+            }
+            else
+            {
+                throw new ArgumentException("The given index must be greater than or equal to 0.", nameof(index)); 
+            }
+        }
+
+        /// <summary>
+        /// If possible, swaps the row o column at index1 with the row or column at index2 within this Matrix.
+        /// </summary>
+        /// <param name="index1">Integer index of the first row/column to swap.</param>
+        /// <param name="index2">Integer index of the first row/column to swap.</param>
+        /// <param name="isRow">Boolean of whether this is swapping a row (true) or a column (false).</param>
+        /// <exception cref="ArgumentException">Thrown if either of the given indices are less than 0, or larger than the applicable dimension of this Matrix.</exception> 
+        public void Swap(int index1, int index2, bool isRow)
+        {
+            Matrix.Swap(this, index1, index2, isRow);
+        }
+
+        /// <summary>
+        /// If possible, swaps the row or column at index1 with the row or column at index2 within the given Matrix.
+        /// </summary>
+        /// <param name="m1">Matrix to swap the rows or columns of.</param>
+        /// <param name="index1">Integer index of the first row/column to swap.</param>
+        /// <param name="index2">Integer index of the second row/column to swap.</param>
+        /// <param name="isRow">Boolean of whether this is swapping a row (true) or a column (false).</param>
+        /// <exception cref="ArgumentException">Thrown if either of the given indices are less than 0, or larger than the applicable dimension of the given Matrix.</exception> 
+        public static void Swap(Matrix m1, int index1, int index2, bool isRow)
+        {
+            if (index1 < 0)
+            {
+                throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index1));
+            }
+            else if (index2 < 0)
+            {
+                throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index2));
+            }
+            else
+            {
+                if (isRow)
+                {
+                    // Swapping rows
+                    int columns = m1.Columns;
+                    if (index1 >= columns)
+                    {
+                        // index1 too large
+                        throw new ArgumentException("Both indices must be within the width of the given Matrix if doing a row swap.", nameof(index1));
+                    }
+                    else if (index2 >= columns)
+                    {
+                        // index2 too large
+                        throw new ArgumentException("Both indices must be within the height of the given Matrix if doing a row swap.", nameof(index2));
+                    }
+                    else
+                    {
+                        Vector r1 = m1.GetRow(index1);
+                        Vector r2 = m1.GetRow(index2);
+                        for (int i = 0; i < columns; i++)
+                        {
+                            m1[index1, i] = r2[i];
+                            m1[index2, i] = r1[i];
+                        } 
+                    }
+                }
+                else
+                {
+                    // Swapping columns
+                    int rows = m1.Rows;
+                    if (index1 >= rows)
+                    {
+                        // index1 too large
+                        throw new ArgumentException("Both indices must be within the height of the given Matrix if doing a column swap.", nameof(index1));
+                    }
+                    else if (index2 >= rows)
+                    {
+                        // index2 too large
+                        throw new ArgumentException("Both indices must be within the height of the given Matrix if doing a column swap.", nameof(index2));
+                    }
+                    else
+                    {
+                        Vector c1 = m1.GetColumn(index1);
+                        Vector c2 = m1.GetColumn(index2);
+                        for (int i = 0; i < rows; i++)
+                        {
+                            m1[i, index1] = c2[i];
+                            m1[i, index2] = c1[i];
+                        }
+                    }
+                }
+            }
+        }
+
         public static double Determinant(Matrix m1)
         {
             throw new NotImplementedException();
         }
 
-        public static Tuple<Matrix, Matrix> LUDecomposition(Matrix m1)
+        public static Tuple<Matrix, Matrix> LUDecompositionOldOld(Matrix m1)
         {
             // TODO: This probably doesn't work.
             if (m1.IsSquare)
@@ -652,6 +808,114 @@ namespace MatrixTools
                 }
 
                 return new Tuple<Matrix, Matrix>(L, U);
+            }
+
+            throw new ArgumentException("The given Matrix must be square to take the LU decomposition.", nameof(m1));
+        }
+
+        public static Tuple<Matrix, Matrix> LUDecompositionOld(Matrix m1)
+        {
+            if (m1.IsSquare)
+            {
+                double sum = 0;
+                int rows = m1.Rows;
+                Matrix L = new Matrix(rows, rows);
+                Matrix U = Matrix.IdentityMatrix(rows);
+
+                for (int j = 0; j < rows; j++)
+                {
+                    for (int i = j; i < rows; i++)
+                    {
+                        sum = 0;
+                        for (int k = 0; k < j; k++)
+                        {
+                            sum += L[i, k] * U[k, j];
+                        }
+                        L[i, j] = m1[i, j] - sum;
+                    }
+
+                    for (int i = j; i < rows; i++)
+                    {
+                        sum = 0;
+                        for (int k = 0; k < j; k++)
+                        {
+                            sum += L[j, k] * U[k, j];
+                        }
+                        
+                        if (L[j, j] == 0)
+                        {
+                            throw new InvalidOperationException("det(L) close to zero. This could cause division by zero. Program execution cannot continue.");
+                        }
+
+                        U[j, i] = (m1[j, i] - sum) / L[j, j];
+                    }
+                }
+
+                return new Tuple<Matrix, Matrix>(L, U);
+            }
+
+            throw new ArgumentException("The given Matrix must be square to take the LU decomposition.", nameof(m1));
+        }
+
+        public static Tuple<int, Matrix, Vector> LUDecomposition(Matrix m1)
+        {
+            // TODO: doesn't work yet
+            if (m1.IsSquare)
+            {
+                int toggle = +1;
+                int size = m1.Rows;
+                Matrix lum = new Matrix(size, size);
+
+                // Copies m1 into lum
+                // TODO: Could this be done with a static or instance method of Matrix? Eg 'Matrix.From(Matrix)' or 'new Matrix(Matrix)'?
+                for (int i = 0; i < size; i++)
+                {
+                    for (int j = 0; j < size; j++)
+                        { lum[i, j] = m1[i, j]; }
+                }
+
+                Vector perm = new Vector(size, Vector.TYPES.RowVector);
+                for (int i = 0; i < size; i++)
+                    { perm[i] = i; }
+
+                for (int j = 0; j < size - 1; j++)
+                {
+                    double max = Math.Abs(lum[j, j]);
+                    int pivot = j;
+
+                    for (int i = j + 1; i < size; i++)
+                    {
+                        double xij = Math.Abs(lum[i, j]);
+                        if (xij > max)
+                        {
+                            max = xij;
+                            pivot = i;
+                        }
+                    }
+
+                    if (pivot != j)
+                    {
+                        // Swap rows j and pivot in Matrix `lum` and elements j and pivot in Vector `perm`.
+                        lum.Swap(pivot, j, isRow: true);
+                        perm.Swap(pivot, j);
+
+                        toggle = -toggle;
+                    }
+
+                    double xjj = lum[j, j];
+                    if (xjj != 0.0)
+                    {
+                        for (int i = j + 1; i < size; i++)
+                        {
+                            double xij = lum[i, j] / xjj;
+                            lum[i, j] = xij;
+                            for (int k = j + 1; k < size; k++)
+                                { lum[i, k] -= xij * lum[j, k]; }
+                        }
+                    }
+                }
+
+                return new Tuple<int, Matrix, Vector>(toggle, lum, perm);
             }
 
             throw new ArgumentException("The given Matrix must be square to take the LU decomposition.", nameof(m1));
