@@ -774,92 +774,21 @@ namespace MatrixTools
             throw new NotImplementedException();
         }
 
-        public static Tuple<Matrix, Matrix> LUDecompositionOldOld(Matrix m1)
-        {
-            // TODO: This probably doesn't work.
-            if (m1.IsSquare)
-            {
-                int rows = m1.Rows;
-                Matrix L = Matrix.Zeros(rows);
-                Matrix U = Matrix.IdentityMatrix(rows);
-
-                for (int i = 0; i < rows; i++)
-                {
-                    L[i, 0] = m1[i, 0];
-                    U[i, i] = 1;
-                }
-
-                for (int j = 1; j < rows; j++)
-                {
-                    U[0, j] = m1[0, j] / L[0, 0];
-                }
-
-                for (int i = 1; i < rows; i++)
-                {
-                    for (int j = 1; j < i; j++)
-                    {
-                        L[i, j] = m1[i, j] - (L.GetRow(i) * U.GetColumn(j));
-                    }
-
-                    for (int j = i - 1; j < rows; j++)
-                    {
-                        U[i, j] = (m1[i, j] - (L.GetRow(i) * U.GetColumn(j))) / L[i, i];
-                    }
-                }
-
-                return new Tuple<Matrix, Matrix>(L, U);
-            }
-
-            throw new ArgumentException("The given Matrix must be square to take the LU decomposition.", nameof(m1));
-        }
-
-        public static Tuple<Matrix, Matrix> LUDecompositionOld(Matrix m1)
-        {
-            if (m1.IsSquare)
-            {
-                double sum = 0;
-                int rows = m1.Rows;
-                Matrix L = new Matrix(rows, rows);
-                Matrix U = Matrix.IdentityMatrix(rows);
-
-                for (int j = 0; j < rows; j++)
-                {
-                    for (int i = j; i < rows; i++)
-                    {
-                        sum = 0;
-                        for (int k = 0; k < j; k++)
-                        {
-                            sum += L[i, k] * U[k, j];
-                        }
-                        L[i, j] = m1[i, j] - sum;
-                    }
-
-                    for (int i = j; i < rows; i++)
-                    {
-                        sum = 0;
-                        for (int k = 0; k < j; k++)
-                        {
-                            sum += L[j, k] * U[k, j];
-                        }
-                        
-                        if (L[j, j] == 0)
-                        {
-                            throw new InvalidOperationException("det(L) close to zero. This could cause division by zero. Program execution cannot continue.");
-                        }
-
-                        U[j, i] = (m1[j, i] - sum) / L[j, j];
-                    }
-                }
-
-                return new Tuple<Matrix, Matrix>(L, U);
-            }
-
-            throw new ArgumentException("The given Matrix must be square to take the LU decomposition.", nameof(m1));
-        }
-
+        /// <summary>
+        /// Calculates the LU decomposition of the given Matrix using Crout's algorithm.
+        /// Credit to Dr. James McCaffrey of Microsoft Research for the initial implementation of this algorithm,
+        /// which was adjusted to fit this library's use case.
+        /// The original implementation is available at <see cref="https://msdn.microsoft.com/en-us/magazine/mt736457.aspx?f=255&MSPPError=-2147217396">MSDN</see>.
+        /// </summary>
+        /// <param name="m1">Matrix to calculate the LU decomposition of.</param>
+        /// <exception cref="ArgumentException">Thrown if the given Matrix is not square.</exception> 
+        /// <returns>
+        /// Tuple with Item1 an int for the permutation toggle,
+        /// Item2 a Matrix that is the combined L and U matrices resulting from the calculation,
+        /// and Item3 a Vector that is the permutations for each row of the given Matrix.
+        /// </returns>
         public static Tuple<int, Matrix, Vector> LUDecomposition(Matrix m1)
         {
-            // TODO: doesn't work yet
             if (m1.IsSquare)
             {
                 int toggle = +1;
