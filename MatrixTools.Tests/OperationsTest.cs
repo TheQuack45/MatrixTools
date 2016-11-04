@@ -11,8 +11,10 @@ namespace MatrixTools.Tests
             TestTranspose();
             TestSwap();
             TestLUDecomp();
+            TestDeterminant();
         }
 
+        [Test]
         public static void TestTranspose()
         {
             Matrix testMatrix = new Matrix(2, 3);
@@ -45,6 +47,7 @@ namespace MatrixTools.Tests
             Console.WriteLine("Vector transpose is valid.");
         }
 
+        [Test]
         public static void TestSwap()
         {
             Matrix testMatrix = new Matrix(2, 3);
@@ -126,6 +129,7 @@ namespace MatrixTools.Tests
             Console.WriteLine("Internal Matrix column swap is valid.");
         }
 
+        [Test]
         public static void TestLUDecomp()
         {
             Matrix testMatrix = new Matrix(3, 3);
@@ -146,6 +150,22 @@ namespace MatrixTools.Tests
             Console.WriteLine("{0} {1} {2}", LU[0, 0], LU[0, 1], LU[0, 2]);
             Console.WriteLine("{0} {1} {2}", LU[1, 0], LU[1, 1], LU[1, 2]);
             Console.WriteLine("{0} {1} {2}", LU[2, 0], LU[2, 1], LU[2, 2]);
+        }
+
+        [Test]
+        public static void TestDeterminant()
+        {
+            Matrix testMatrix = new Matrix(2, 2);
+            testMatrix[0, 0] = 0.232580;
+            testMatrix[0, 1] = 0.980771;
+            testMatrix[1, 0] = 0.030324;
+            testMatrix[1, 1] = 0.045210;
+
+            double result = Matrix.Determinant(testMatrix);
+            // Assertion exception fails if you don't round, but I don't have more digits from Octave because I'm incompetent.
+            Assert.AreEqual(-0.019226, Math.Round(result, 6));
+
+            Console.WriteLine("Matrix determinant is valid.");
         }
     }
 }

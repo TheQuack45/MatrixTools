@@ -251,6 +251,7 @@ namespace MatrixTools
         #endregion
         #endregion
 
+        // TODO: Add null checks to all these methods.
         #region Methods definition
         /// <summary>
         /// Gets a 1*1 Matrix containing the element at the specified location.
@@ -452,20 +453,10 @@ namespace MatrixTools
         {
             if (size > 0)
             {
-                Matrix returnMatrix = new Matrix(size, size);
+                Matrix returnMatrix = Matrix.Zeros(size);
                 for (int i = 0; i < size; i++)
                 {
-                    for (int j = 0; j < size; j++)
-                    {
-                        if (i == j)
-                        {
-                            returnMatrix[i, j] = 1;
-                        }
-                        else
-                        {
-                            returnMatrix[i, j] = 0;
-                        }
-                    }
+                    returnMatrix[i, i] = 1;
                 }
 
                 return returnMatrix;
@@ -769,9 +760,26 @@ namespace MatrixTools
             }
         }
 
+        /// <summary>
+        /// If possible, calculates the determinant of the given square Matrix.
+        /// </summary>
+        /// <param name="m1">Matrix to calculate the determinant of.</param>
+        /// <exception cref="ArgumentException">Thrown if the given Matrix is not square.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if the given Matrix is null.</exception> 
+        /// <returns>The determinant of the given matrix.</returns>
         public static double Determinant(Matrix m1)
         {
-            throw new NotImplementedException();
+            if (m1 == null)
+                { throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1)); }
+            if (!m1.IsSquare)
+                { throw new ArgumentException("The given Matrix must be square to calculate the determinant.", nameof(m1)); }
+
+            Tuple<int, Matrix, Vector> decompResult = Matrix.LUDecomposition(m1);
+            double det = decompResult.Item1;
+            for (int i = 0;  i < decompResult.Item2.Rows; i++)
+                { det *= decompResult.Item2[i, i]; }
+
+            return det;
         }
 
         /// <summary>
