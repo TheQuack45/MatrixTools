@@ -432,6 +432,35 @@ namespace MatrixTools
             }
         }
 
+        public string ToString(string format = "")
+        {
+            // TODO: Docs and unit test for this
+            StringBuilder outputBuilder = new StringBuilder();
+            int size = this.Size;
+            TYPES type = this.Type;
+
+            for (int i = 0; i < size; i++)
+            {
+                double num = this.InnerVector[i];
+                if (num < 0)
+                    { outputBuilder.Length--; }
+                outputBuilder.Append(num.ToString(format));
+                if (i < size - 1)
+                {
+                    if (type == TYPES.RowVector)
+                    {
+                        outputBuilder.Append("  ");
+                    }
+                    else if (type == TYPES.ColumnVector)
+                    {
+                        outputBuilder.Append(Environment.NewLine);
+                    }
+                }
+            }
+
+            return outputBuilder.ToString();
+        }
+
         IEnumerator<double> IEnumerable<double>.GetEnumerator()
         {
             IEnumerator enumerator = this._innerVector.GetEnumerator();

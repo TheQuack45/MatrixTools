@@ -229,6 +229,11 @@ namespace MatrixTools
 
         public static bool operator ==(Matrix m1, Matrix m2)
         {
+            if ((object)m1 == null || (object)m2 == null)
+            {
+                return false;
+            }
+
             if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
                 { return false; }
 
@@ -308,28 +313,33 @@ namespace MatrixTools
         /// <returns>Vector that is equivalent to the given Matrix.</returns>
         public static Vector ToVector(Matrix m1)
         {
-            if (m1.Rows == 1)
+            if (m1 != null)
             {
-                Vector returnVector = new Vector(m1.Columns, Vector.TYPES.RowVector);
-                for (int i = 0; i < returnVector.Size; i++)
+                if (m1.Rows == 1)
                 {
-                    returnVector[i] = m1[0, i];
+                    Vector returnVector = new Vector(m1.Columns, Vector.TYPES.RowVector);
+                    for (int i = 0; i < returnVector.Size; i++)
+                    {
+                        returnVector[i] = m1[0, i];
+                    }
+                    return returnVector;
                 }
-                return returnVector;
-            }
-            else if (m1.Columns == 1)
-            {
-                Vector returnVector = new Vector(m1.Rows, Vector.TYPES.ColumnVector);
-                for (int i = 0; i < returnVector.Size; i++)
+                else if (m1.Columns == 1)
                 {
-                    returnVector[i] = m1[i, 0];
+                    Vector returnVector = new Vector(m1.Rows, Vector.TYPES.ColumnVector);
+                    for (int i = 0; i < returnVector.Size; i++)
+                    {
+                        returnVector[i] = m1[i, 0];
+                    }
+                    return returnVector;
                 }
-                return returnVector;
+                else
+                {
+                    throw new ArgumentException("The width and/or height of the given Matrix must be 1 to be converted to a Vector.", nameof(m1));
+                }
             }
-            else
-            {
-                throw new ArgumentException("The width and/or height of the given Matrix must be 1 to be converted to a Vector.", nameof(m1));
-            }
+
+            throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
         }
 
         /// <summary>
@@ -384,19 +394,24 @@ namespace MatrixTools
         /// <returns>Row-Vector with each element containing the sum of the given Matrix' corresponding column.</returns>
         public static Vector Sum(Matrix m1)
         {
-            int rows = m1.Rows;
-            int columns = m1.Columns;
-            Vector returnVector = new Vector(columns, Vector.TYPES.RowVector);
-
-            for (int i = 0; i < columns; i++)
+            if (m1 != null)
             {
-                for (int j = 0; j < rows; j++)
+                int rows = m1.Rows;
+                int columns = m1.Columns;
+                Vector returnVector = new Vector(columns, Vector.TYPES.RowVector);
+
+                for (int i = 0; i < columns; i++)
                 {
-                    returnVector[i] += m1[j, i];
+                    for (int j = 0; j < rows; j++)
+                    {
+                        returnVector[i] += m1[j, i];
+                    }
                 }
+
+                return returnVector;
             }
 
-            return returnVector;
+            throw new ArgumentNullException("The given matrix cannot be null.", nameof(m1));
         }
 
         /// <summary>
@@ -408,17 +423,22 @@ namespace MatrixTools
         /// <returns>The result Matrix of the exponentiation.</returns>
         public static Matrix Power(Matrix m1, double scalar)
         {
-            if (m1.IsSquare)
+            if (m1 != null)
             {
-                for (int i = 0; i < scalar; i++)
+                if (m1.IsSquare)
                 {
-                    m1 *= m1;
+                    for (int i = 0; i < scalar; i++)
+                    {
+                        m1 *= m1;
+                    }
+
+                    return m1;
                 }
 
-                return m1;
+                throw new ArgumentException("The given matrix must be square to put it to a power.", nameof(m1));
             }
 
-            throw new ArgumentException("The given matrix must be square to put it to a power.", nameof(m1));
+            throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
         }
 
         /// <summary>
@@ -429,19 +449,24 @@ namespace MatrixTools
         /// <returns>Matrix containing the result of the element-wise power calculation.</returns>
         public static Matrix EMPower(Matrix m1, double scalar)
         {
-            int rows = m1.Rows;
-            int columns = m1.Columns;
-
-            Matrix returnMatrix = new Matrix(rows, columns);
-            for (int i = 0; i < rows; i++)
+            if (m1 != null)
             {
-                for (int j = 0; j < columns; j++)
+                int rows = m1.Rows;
+                int columns = m1.Columns;
+
+                Matrix returnMatrix = new Matrix(rows, columns);
+                for (int i = 0; i < rows; i++)
                 {
-                    returnMatrix[i, j] = Math.Pow(m1[i, j], scalar);
+                    for (int j = 0; j < columns; j++)
+                    {
+                        returnMatrix[i, j] = Math.Pow(m1[i, j], scalar);
+                    }
                 }
+
+                return returnMatrix;
             }
 
-            return returnMatrix;
+            throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
         }
 
         /// <summary>
@@ -580,19 +605,24 @@ namespace MatrixTools
         /// <returns>Matrix that is the transposed version of the given Matrix.</returns>
         public static Matrix Transpose(Matrix m1)
         {
-            int rows = m1.Rows;
-            int columns = m1.Columns;
-
-            Matrix transposed = new Matrix(columns, rows);
-            for (int i = 0; i < rows; i++)
+            if (m1 != null)
             {
-                for (int j = 0; j < columns; j++)
+                int rows = m1.Rows;
+                int columns = m1.Columns;
+
+                Matrix transposed = new Matrix(columns, rows);
+                for (int i = 0; i < rows; i++)
                 {
-                    transposed[j, i] = m1[i, j];
+                    for (int j = 0; j < columns; j++)
+                    {
+                        transposed[j, i] = m1[i, j];
+                    }
                 }
+
+                return transposed;
             }
 
-            return transposed;
+            throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
         }
 
         /// <summary>
@@ -632,6 +662,16 @@ namespace MatrixTools
         /// </exception> 
         public static void Swap(Matrix m1, Vector v1, int index)
         {
+            if (m1 == null)
+            {
+                throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
+            }
+
+            if (v1 == null)
+            {
+                throw new ArgumentNullException("The given Vector cannot be null.", nameof(v1));
+            }
+
             if (index >= 0)
             {
                 if (v1.Type == Vector.TYPES.ColumnVector)
@@ -705,6 +745,10 @@ namespace MatrixTools
             {
                 throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index2));
             }
+            else if (m1 == null)
+            {
+                throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
+            }
             else
             {
                 if (isRow)
@@ -761,6 +805,33 @@ namespace MatrixTools
         }
 
         /// <summary>
+        /// Creates a copy of the given Matrix and returns it.
+        /// </summary>
+        /// <param name="m1">Matrix to copy.</param>
+        /// <returns>A copy of the given Matrix.</returns>
+        public static Matrix From(Matrix m1)
+        {
+            if (m1 != null)
+            {
+                int rows = m1.Rows;
+                int columns = m1.Columns;
+                Matrix returnMatrix = new Matrix(rows, columns);
+
+                for (int i = 0; i < rows; i++)
+                {
+                    for (int j = 0; j < columns; j++)
+                    {
+                        returnMatrix[i, j] = m1[i, j];
+                    }
+                }
+
+                return returnMatrix;
+            }
+
+            throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
+        }
+
+        /// <summary>
         /// If possible, calculates the determinant of the given square Matrix.
         /// </summary>
         /// <param name="m1">Matrix to calculate the determinant of.</param>
@@ -783,6 +854,27 @@ namespace MatrixTools
         }
 
         /// <summary>
+        /// If possible, calculates the determinant of the given square Matrix with the given det value.
+        /// </summary>
+        /// <param name="det">The initial toggle value. Equivalent to Item1 from the LUDecomposition return Tuple.</param>
+        /// <param name="m1">The Matrix to calculate the determinant of.</param>
+        /// <returns></returns>
+        public static double Determinant(double det, Matrix m1)
+        {
+            if (m1 == null)
+                { throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1)); }
+            if (!m1.IsSquare)
+                { throw new ArgumentException("The given Matrix must be square to calculate the determinant.", nameof(m1)); }
+            if (det != 1 && det != -1)
+                { throw new ArgumentException("The given det value must be either positive or negative 1.", nameof(det)); }
+
+            for (int i = 0; i < m1.Rows; i++)
+                { det *= m1[i, i]; }
+
+            return det;
+        }
+
+        /// <summary>
         /// Calculates the LU decomposition of the given Matrix using Crout's algorithm.
         /// Credit to Dr. James McCaffrey of Microsoft Research for the initial implementation of this algorithm,
         /// which was adjusted to fit this library's use case.
@@ -797,65 +889,113 @@ namespace MatrixTools
         /// </returns>
         public static Tuple<int, Matrix, Vector> LUDecomposition(Matrix m1)
         {
-            if (m1.IsSquare)
-            {
-                int toggle = +1;
-                int size = m1.Rows;
-                Matrix lum = new Matrix(size, size);
-
-                // Copies m1 into lum
-                // TODO: Could this be done with a static or instance method of Matrix? Eg 'Matrix.From(Matrix)' or 'new Matrix(Matrix)'?
-                for (int i = 0; i < size; i++)
+            if (m1 != null) {
+                if (m1.IsSquare)
                 {
-                    for (int j = 0; j < size; j++)
-                        { lum[i, j] = m1[i, j]; }
-                }
+                    int toggle = +1;
+                    int size = m1.Rows;
+                    Matrix lum = Matrix.From(m1);
 
-                Vector perm = new Vector(size, Vector.TYPES.RowVector);
-                for (int i = 0; i < size; i++)
+                    Vector perm = new Vector(size, Vector.TYPES.RowVector);
+                    for (int i = 0; i < size; i++)
                     { perm[i] = i; }
 
-                for (int j = 0; j < size - 1; j++)
-                {
-                    double max = Math.Abs(lum[j, j]);
-                    int pivot = j;
-
-                    for (int i = j + 1; i < size; i++)
+                    for (int j = 0; j < size - 1; j++)
                     {
-                        double xij = Math.Abs(lum[i, j]);
-                        if (xij > max)
-                        {
-                            max = xij;
-                            pivot = i;
-                        }
-                    }
+                        double max = Math.Abs(lum[j, j]);
+                        int pivot = j;
 
-                    if (pivot != j)
-                    {
-                        // Swap rows j and pivot in Matrix `lum` and elements j and pivot in Vector `perm`.
-                        lum.Swap(pivot, j, isRow: true);
-                        perm.Swap(pivot, j);
-
-                        toggle = -toggle;
-                    }
-
-                    double xjj = lum[j, j];
-                    if (xjj != 0.0)
-                    {
                         for (int i = j + 1; i < size; i++)
                         {
-                            double xij = lum[i, j] / xjj;
-                            lum[i, j] = xij;
-                            for (int k = j + 1; k < size; k++)
+                            double xij = Math.Abs(lum[i, j]);
+                            if (xij > max)
+                            {
+                                max = xij;
+                                pivot = i;
+                            }
+                        }
+
+                        if (pivot != j)
+                        {
+                            // Swap rows j and pivot in Matrix `lum` and elements j and pivot in Vector `perm`.
+                            lum.Swap(pivot, j, isRow: true);
+                            perm.Swap(pivot, j);
+
+                            toggle = -toggle;
+                        }
+
+                        double xjj = lum[j, j];
+                        if (xjj != 0.0)
+                        {
+                            for (int i = j + 1; i < size; i++)
+                            {
+                                double xij = lum[i, j] / xjj;
+                                lum[i, j] = xij;
+                                for (int k = j + 1; k < size; k++)
                                 { lum[i, k] -= xij * lum[j, k]; }
+                            }
                         }
                     }
+
+                    return new Tuple<int, Matrix, Vector>(toggle, lum, perm);
                 }
 
-                return new Tuple<int, Matrix, Vector>(toggle, lum, perm);
+                throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
             }
 
             throw new ArgumentException("The given Matrix must be square to take the LU decomposition.", nameof(m1));
+        }
+
+        public static Matrix Inverse(Matrix m1)
+        {
+            if (m1 != null)
+            {
+                Tuple<int, Matrix, Vector> decompResult = Matrix.LUDecomposition(m1);
+                double det = Matrix.Determinant(decompResult.Item1, decompResult.Item2);
+
+                if (det != 0)
+                {
+                    // TODO: help
+                    throw new NotImplementedException("I haven't done this yet.");
+                }
+                else
+                {
+                    throw new ArgumentException("The given Matrix does not have an inverse.", nameof(m1));
+                }
+            }
+
+            throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
+        }
+
+        /// <summary>
+        /// Converts this Matrix to a string with each element being formatted using Double.Format using the given format string.
+        /// If no format string is given, the default formatting is used.
+        /// </summary>
+        /// <param name="format">Format string to use for each element.</param>
+        /// <returns>The string representation of this Matrix.</returns>
+        public string ToString(string format = "")
+        {
+            StringBuilder outputBuilder = new StringBuilder();
+            int rows = this.Rows;
+            int columns = this.Columns;
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    double num = this.InnerMatrix[i, j];
+                    if (num < 0)
+                        { outputBuilder.Length--; }
+                    outputBuilder.Append(num.ToString(format));
+                    if (j < columns - 1)
+                        { outputBuilder.Append("  "); }
+                }
+
+                if (i < rows)
+                    { outputBuilder.Append(Environment.NewLine); }
+            }
+
+            return outputBuilder.ToString();
         }
 
         IEnumerator<double> IEnumerable<double>.GetEnumerator()
