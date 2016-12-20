@@ -216,6 +216,11 @@ namespace MatrixTools
             int size = v1.Size;
             TYPES type = v1.Type;
 
+            if ((object)v1 == null || (object)v2 == null)
+            {
+                return false;
+            }
+
             if (type == v2.Type && size == v2.Size)
             {
                 for (int i = 0; i < size; i++)
@@ -344,6 +349,7 @@ namespace MatrixTools
 
         public static Vector CrossProduct(Vector v1, Vector v2)
         {
+            // TODO: this
             throw new NotImplementedException("Cross product has not been implemented yet.");
         }
 
@@ -442,7 +448,7 @@ namespace MatrixTools
             for (int i = 0; i < size; i++)
             {
                 double num = this.InnerVector[i];
-                if (num < 0)
+                if (num < 0 && i != 0)
                     { outputBuilder.Length--; }
                 outputBuilder.Append(num.ToString(format));
                 if (i < size - 1)
