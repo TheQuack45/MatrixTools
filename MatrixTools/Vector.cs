@@ -83,6 +83,10 @@ namespace MatrixTools
             this._type = type;
             this._innerVector = new double[size];
         }
+
+        public Vector()
+        {
+        }
         #endregion
 
         #region Operator overloads

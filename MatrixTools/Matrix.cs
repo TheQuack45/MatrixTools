@@ -9,6 +9,10 @@ namespace MatrixTools
 {
     public class Matrix : IEnumerable<double>
     {
+        #region Static members definition
+        public enum MERGE_TYPE { Column, Row };
+        #endregion
+
         #region Members definition
         protected double[,] _innerMatrix;
         protected double[,] InnerMatrix
@@ -68,7 +72,33 @@ namespace MatrixTools
 
         #region Operator overloads
         #region Cast operators
-        
+        public static explicit operator Vector(Matrix m1)
+        {
+            Vector returnVector = null;
+
+            if (m1.Width == 1)
+            {
+                // Column Vector
+                returnVector = new Vector(m1.Height, Vector.TYPES.ColumnVector);
+
+                for (int i = 0; i < m1.Height; i++)
+                {
+                    returnVector[i] = m1[i, 0];
+                }
+            }
+            else if (m1.Height == 1)
+            {
+                // Row vector
+                returnVector = new Vector(m1.Width, Vector.TYPES.RowVector);
+
+                for (int i = 0; i < m1.Width; i++)
+                {
+                    returnVector[i] = m1[0, i];
+                }
+            }
+
+            return returnVector;
+        }
         #endregion
 
         #region Standard operators
@@ -227,37 +257,149 @@ namespace MatrixTools
             return returnMatrix;
         }
 
-        public static bool operator ==(Matrix m1, Matrix m2)
+        //public static bool operator ==(Matrix m1, Matrix m2)
+        //{
+        //    if ((object)m1 == null || (object)m2 == null)
+        //    {
+        //        return false;
+        //    }
+
+        //    if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
+        //        { return false; }
+
+        //    for (int i = 0; i < m1.Rows; i++)
+        //    {
+        //        for (int j = 0; j < m1.Columns; j++)
+        //        {
+        //            if (m1[i, j] != m2[i, j])
+        //                { return false; }
+        //        }
+        //    }
+
+        //    return true;
+        //}
+
+        //public static bool operator !=(Matrix m1, Matrix m2)
+        //{
+        //    return !(m1 == m2);
+        //}
+
+        public static Matrix operator ==(Matrix m1, Matrix m2)
         {
-            if ((object)m1 == null || (object)m2 == null)
+            if ((object)m1 == null)
             {
-                return false;
+                throw new ArgumentNullException("The given matrices cannot be null.", nameof(m1));
+            }
+            else if ((object)m2 == null)
+            {
+                throw new ArgumentNullException("The given matrices cannot be null.", nameof(m2));
             }
 
-            if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
-                { return false; }
-
-            for (int i = 0; i < m1.Rows; i++)
+            if (m1.Rows != m2.Rows)
             {
-                for (int j = 0; j < m1.Columns; j++)
+                throw new ArgumentException("The row count of the given matrices must be equal.");
+            }
+            else if (m1.Columns != m2.Columns)
+            {
+                throw new ArgumentException("The column count of the given matrices must be equal.");
+            }
+
+            Matrix returnMatrix = new Matrix(m1.Rows, m1.Columns);
+            for (int cRow = 0; cRow < m1.Rows; cRow++)
+            {
+                for (int cCol = 0; cCol < m1.Columns; cCol++)
                 {
-                    if (m1[i, j] != m2[i, j])
-                        { return false; }
+                    returnMatrix[cRow, cCol] = ((m1[cRow, cCol] == m2[cRow, cCol]) == true ? 1.0 : 0.0);
                 }
             }
 
-            return true;
+            return returnMatrix;
         }
 
-        public static bool operator !=(Matrix m1, Matrix m2)
+        public static Matrix operator !=(Matrix m1, Matrix m2)
         {
-            return !(m1 == m2);
+            Matrix equalities = (m1 == m2);
+            for (int cRow = 0; cRow < equalities.Rows; cRow++)
+            {
+                for (int cCol = 0; cCol < equalities.Columns; cCol++)
+                {
+                    equalities[cRow, cCol] = (equalities[cRow, cCol] == 1.0) ? 0.0 : 1.0;
+                }
+            }
+
+            return equalities;
         }
         #endregion
         #endregion
 
         // TODO: Add null checks to all these methods.
         #region Methods definition
+        public static Matrix Merge(Matrix m1, Matrix m2, MERGE_TYPE type)
+        {
+            if ((object)m1 == null)
+            {
+                throw new ArgumentNullException("The given matrices cannot be null.", nameof(m1));
+            }
+            else if ((object)m2 == null)
+            {
+                throw new ArgumentNullException("The given matrices cannot be null.", nameof(m2));
+            }
+
+            Matrix returnMatrix = null;
+            if (type == MERGE_TYPE.Column)
+            {
+                if (m1.Rows == m2.Rows)
+                {
+                    // Column merge (m2 is appended to the right side of m1)
+                    returnMatrix = new Matrix(m1.Rows, (m1.Columns + m2.Columns));
+
+                    for (int cRow = 0; cRow < returnMatrix.Rows; cRow++)
+                    {
+                        for (int cCol = 0; cCol < m1.Columns; cCol++)
+                        {
+                            returnMatrix[cRow, cCol] = m1[cRow, cCol];
+                        }
+
+                        for (int cCol = 0; cCol < m2.Columns; cCol++)
+                        {
+                            returnMatrix[cRow, (cCol + m1.Columns - 1)] = m2[cRow, cCol];
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("The row count of both matrices must be equal to perform a column merge.");
+                }
+            }
+            else if (type == MERGE_TYPE.Row)
+            {
+                if (m1.Columns == m2.Columns)
+                {
+                    // Row merge (m2 is appended to the bottom of m1)
+                    returnMatrix = new Matrix((m1.Rows + m2.Rows), m1.Columns);
+
+                    for (int cCol = 0; cCol < returnMatrix.Columns; cCol++)
+                    {
+                        for (int cRow = 0; cRow < m1.Rows; cRow++)
+                        {
+                            returnMatrix[cRow, cCol] = m1[cRow, cCol];
+                        }
+
+                        for (int cRow = 0; cRow < m2.Rows; cRow++)
+                        {
+                            returnMatrix[(cRow + m1.Rows - 1), cCol] = m2[cRow, cCol];
+                        }
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("The column count of both matrices must be equal to perform a row merge.");
+                }
+            }
+
+            return returnMatrix;
+        }
+        
         /// <summary>
         /// Gets a 1*1 Matrix containing the element at the specified location.
         /// </summary>
@@ -313,7 +455,7 @@ namespace MatrixTools
         /// <returns>Vector that is equivalent to the given Matrix.</returns>
         public static Vector ToVector(Matrix m1)
         {
-            if (m1 != null)
+            if ((object)m1 != null)
             {
                 if (m1.Rows == 1)
                 {
@@ -394,7 +536,7 @@ namespace MatrixTools
         /// <returns>Row-Vector with each element containing the sum of the given Matrix' corresponding column.</returns>
         public static Vector Sum(Matrix m1)
         {
-            if (m1 != null)
+            if ((object)m1 != null)
             {
                 int rows = m1.Rows;
                 int columns = m1.Columns;
@@ -423,7 +565,7 @@ namespace MatrixTools
         /// <returns>The result Matrix of the exponentiation.</returns>
         public static Matrix Power(Matrix m1, double scalar)
         {
-            if (m1 != null)
+            if ((object)m1 != null)
             {
                 if (m1.IsSquare)
                 {
@@ -449,7 +591,7 @@ namespace MatrixTools
         /// <returns>Matrix containing the result of the element-wise power calculation.</returns>
         public static Matrix EMPower(Matrix m1, double scalar)
         {
-            if (m1 != null)
+            if ((object)m1 != null)
             {
                 int rows = m1.Rows;
                 int columns = m1.Columns;
@@ -605,7 +747,7 @@ namespace MatrixTools
         /// <returns>Matrix that is the transposed version of the given Matrix.</returns>
         public static Matrix Transpose(Matrix m1)
         {
-            if (m1 != null)
+            if ((object)m1 != null)
             {
                 int rows = m1.Rows;
                 int columns = m1.Columns;
@@ -662,12 +804,12 @@ namespace MatrixTools
         /// </exception> 
         public static void Swap(Matrix m1, Vector v1, int index)
         {
-            if (m1 == null)
+            if ((object)m1 == null)
             {
                 throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
             }
 
-            if (v1 == null)
+            if ((object)v1 == null)
             {
                 throw new ArgumentNullException("The given Vector cannot be null.", nameof(v1));
             }
@@ -745,7 +887,7 @@ namespace MatrixTools
             {
                 throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index2));
             }
-            else if (m1 == null)
+            else if ((object)m1 == null)
             {
                 throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1));
             }
@@ -811,7 +953,7 @@ namespace MatrixTools
         /// <returns>A copy of the given Matrix.</returns>
         public static Matrix From(Matrix m1)
         {
-            if (m1 != null)
+            if ((object)m1 != null)
             {
                 int rows = m1.Rows;
                 int columns = m1.Columns;
@@ -840,7 +982,7 @@ namespace MatrixTools
         /// <returns>The determinant of the given matrix.</returns>
         public static double Determinant(Matrix m1)
         {
-            if (m1 == null)
+            if ((object)m1 == null)
                 { throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1)); }
             if (!m1.IsSquare)
                 { throw new ArgumentException("The given Matrix must be square to calculate the determinant.", nameof(m1)); }
@@ -861,7 +1003,7 @@ namespace MatrixTools
         /// <returns></returns>
         public static double Determinant(double det, Matrix m1)
         {
-            if (m1 == null)
+            if ((object)m1 == null)
                 { throw new ArgumentNullException("The given Matrix cannot be null.", nameof(m1)); }
             if (!m1.IsSquare)
                 { throw new ArgumentException("The given Matrix must be square to calculate the determinant.", nameof(m1)); }
@@ -889,7 +1031,7 @@ namespace MatrixTools
         /// </returns>
         public static Tuple<int, Matrix, Vector> LUDecomposition(Matrix m1)
         {
-            if (m1 != null) {
+            if ((object)m1 != null) {
                 if (m1.IsSquare)
                 {
                     int toggle = +1;
@@ -948,7 +1090,7 @@ namespace MatrixTools
 
         public static Matrix Inverse(Matrix m1)
         {
-            if (m1 != null)
+            if ((object)m1 != null)
             {
                 Tuple<int, Matrix, Vector> decompResult = Matrix.LUDecomposition(m1);
                 double det = Matrix.Determinant(decompResult.Item1, decompResult.Item2);

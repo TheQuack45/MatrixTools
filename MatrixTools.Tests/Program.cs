@@ -20,7 +20,13 @@ namespace MatrixTools.Tests
 
             OperationsTest.TestOperations();
 
-            GradientDescentTest.TestGradientDescent();
+            Console.WriteLine("");
+
+            //GradientDescentTest.TestGradientDescent();
+
+            Console.WriteLine("");
+
+            NeuralNetworkTest.TestNeuralNetworks();
 
             Console.WriteLine("");
 
