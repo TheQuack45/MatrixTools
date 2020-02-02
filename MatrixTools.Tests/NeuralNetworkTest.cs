@@ -70,10 +70,10 @@ namespace MatrixTools.Tests
 
         private static Tuple<Matrix, Matrix, Matrix, Matrix> LoadData()
         {
-            FileStream theta1Stream = new FileStream("theta1.txt", FileMode.Open, FileAccess.Read);
-            FileStream theta2Stream = new FileStream("theta2.txt", FileMode.Open, FileAccess.Read);
-            FileStream XStream = new FileStream("X.txt", FileMode.Open, FileAccess.Read);
-            FileStream yStream = new FileStream("y.txt", FileMode.Open, FileAccess.Read);
+            FileStream theta1Stream = new FileStream("theta1.data", FileMode.Open, FileAccess.Read);
+            FileStream theta2Stream = new FileStream("theta2.data", FileMode.Open, FileAccess.Read);
+            FileStream XStream = new FileStream("X.data", FileMode.Open, FileAccess.Read);
+            FileStream yStream = new FileStream("y.data", FileMode.Open, FileAccess.Read);
 
             string theta1String = new StreamReader(theta1Stream).ReadToEnd();
             string theta2String = new StreamReader(theta2Stream).ReadToEnd();

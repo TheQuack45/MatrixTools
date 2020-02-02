@@ -594,7 +594,7 @@ namespace MatrixTools
         /// <returns>Square Matrix of the given size filled with zeroes.</returns>
         public static Matrix Zeros(int size)
         {
-            if (size > 0)
+            if (size <= 0)
                 { throw new ArgumentException("The Matrix size must be greater than 0.", nameof(size)); }
 
             Matrix returnMatrix = new Matrix(size, size);
