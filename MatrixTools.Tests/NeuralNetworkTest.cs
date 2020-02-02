@@ -5,13 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.IO;
+using NUnit.Framework;
 
 namespace MatrixTools.Tests
 {
+    [TestFixture]
     public class NeuralNetworkTest
     {
         private const double EULER_NUMBER = 2.7182818284590452353602874;
 
+        [Test]
         public static void TestNeuralNetworks()
         {
             Tuple<Matrix, Matrix, Matrix, Matrix> loadedMatrices = LoadData();
@@ -70,10 +73,10 @@ namespace MatrixTools.Tests
 
         private static Tuple<Matrix, Matrix, Matrix, Matrix> LoadData()
         {
-            FileStream theta1Stream = new FileStream("theta1.data", FileMode.Open, FileAccess.Read);
-            FileStream theta2Stream = new FileStream("theta2.data", FileMode.Open, FileAccess.Read);
-            FileStream XStream = new FileStream("X.data", FileMode.Open, FileAccess.Read);
-            FileStream yStream = new FileStream("y.data", FileMode.Open, FileAccess.Read);
+            FileStream theta1Stream = new FileStream(Path.Combine(TestContext.CurrentContext.TestDirectory, "theta1.data"), FileMode.Open, FileAccess.Read);
+            FileStream theta2Stream = new FileStream(Path.Combine(TestContext.CurrentContext.TestDirectory, "theta2.data"), FileMode.Open, FileAccess.Read);
+            FileStream XStream = new FileStream(Path.Combine(TestContext.CurrentContext.TestDirectory, "X.data"), FileMode.Open, FileAccess.Read);
+            FileStream yStream = new FileStream(Path.Combine(TestContext.CurrentContext.TestDirectory, "y.data"), FileMode.Open, FileAccess.Read);
 
             string theta1String = new StreamReader(theta1Stream).ReadToEnd();
             string theta2String = new StreamReader(theta2Stream).ReadToEnd();

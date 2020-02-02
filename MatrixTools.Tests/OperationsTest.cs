@@ -6,14 +6,6 @@ namespace MatrixTools.Tests
     [TestFixture]
     public class OperationsTest
     {
-        public static void TestOperations()
-        {
-            TestTranspose();
-            TestSwap();
-            TestLUDecomp();
-            TestDeterminant();
-        }
-
         [Test]
         public static void TestTranspose()
         {
@@ -32,7 +24,6 @@ namespace MatrixTools.Tests
             Assert.AreEqual(4, transposedMatrix[1, 1]);
             Assert.AreEqual(5, transposedMatrix[2, 0]);
             Assert.AreEqual(6, transposedMatrix[2, 1]);
-            Console.WriteLine("Matrix transpose is valid.");
 
             Vector testVector = new Vector(3, Vector.TYPES.ColumnVector);
             testVector[0] = 1;
@@ -44,7 +35,6 @@ namespace MatrixTools.Tests
             Assert.AreEqual(1, transposedVector[0]);
             Assert.AreEqual(2, transposedVector[1]);
             Assert.AreEqual(3, transposedVector[2]);
-            Console.WriteLine("Vector transpose is valid.");
         }
 
         [Test]
@@ -72,7 +62,6 @@ namespace MatrixTools.Tests
             Assert.AreEqual(2, testMatrix[0, 0]);
             Assert.AreEqual(4, testMatrix[0, 1]);
             Assert.AreEqual(6, testMatrix[0, 2]);
-            Console.WriteLine("Matrix-Vector row swap is valid.");
 
             testMatrix = new Matrix(2, 3);
             testMatrix[0, 0] = 1;
@@ -93,7 +82,6 @@ namespace MatrixTools.Tests
 
             Assert.AreEqual(2, testMatrix[0, 0]);
             Assert.AreEqual(4, testMatrix[1, 0]);
-            Console.WriteLine("Matrix-Vector column swap is valid.");
 
             Matrix tm2 = new Matrix(2, 3);
             tm2[0, 0] = 1;
@@ -110,7 +98,6 @@ namespace MatrixTools.Tests
             Assert.AreEqual(1, tm2[1, 0]);
             Assert.AreEqual(2, tm2[1, 1]);
             Assert.AreEqual(3, tm2[1, 2]);
-            Console.WriteLine("Internal Matrix row swap is valid.");
 
             tm2[0, 0] = 1;
             tm2[0, 1] = 2;
@@ -126,7 +113,6 @@ namespace MatrixTools.Tests
             Assert.AreEqual(4, tm2[1, 1]);
             Assert.AreEqual(3, tm2[0, 2]);
             Assert.AreEqual(6, tm2[1, 2]);
-            Console.WriteLine("Internal Matrix column swap is valid.");
         }
 
         [Test]
@@ -162,10 +148,8 @@ namespace MatrixTools.Tests
             testMatrix[1, 1] = 0.045210;
 
             double result = Matrix.Determinant(testMatrix);
-            // Assertion exception fails if you don't round, but I don't have more digits from Octave because I'm incompetent.
+            // Assertion fails if you don't round, but I don't have more digits from Octave because I'm incompetent.
             Assert.AreEqual(-0.019226, Math.Round(result, 6));
-
-            Console.WriteLine("Matrix determinant is valid.");
         }
     }
 }

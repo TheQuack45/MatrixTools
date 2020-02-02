@@ -908,6 +908,7 @@ namespace MatrixTools
             return det;
         }
 
+        // TODO: This is not working properly.
         /// <summary>
         /// Calculates the LU decomposition of the given Matrix using Crout's algorithm.
         /// Credit to Dr. James McCaffrey of Microsoft Research for the initial implementation of this algorithm,
