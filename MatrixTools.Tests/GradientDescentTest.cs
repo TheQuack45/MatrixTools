@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 
 namespace MatrixTools.Tests
 {
+    [TestFixture]
     public class GradientDescentTest
     {
+        // TODO: This.
+        //[Test]
         public static void TestGradientDescent()
         {
             Tuple<Matrix, Vector> loadedMatrices = LoadData();
@@ -38,14 +41,11 @@ namespace MatrixTools.Tests
             predict2Matrix[0, 0] = 1;
             predict2Matrix[0, 1] = 7;
             Assert.AreEqual("45342.450", ((predict2Matrix * theta).ToScalar() * 10000).ToString("0.000"));
-            //Console.WriteLine(theta.ToString("0.000000"));
-
-            Console.WriteLine("Gradient descent test is valid.");
         }
 
         public static Tuple<Matrix, Vector> LoadData()
         {
-            FileStream stream = new FileStream("ex1data1.txt", FileMode.Open, FileAccess.Read);
+            FileStream stream = new FileStream(Path.Combine(TestContext.CurrentContext.TestDirectory, "ex1data1.data"), FileMode.Open, FileAccess.Read);
             StreamReader reader = new StreamReader(stream);
             List<string> xVals = new List<string>();
             List<string> yVals = new List<string>();

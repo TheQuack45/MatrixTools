@@ -1,8 +1,0 @@
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\bin\Debug\MatrixTools.Demonstration.exe.config
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\obj\Debug\MatrixTools.Demonstration.csprojResolveAssemblyReference.cache
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\bin\Debug\MatrixTools.Demonstration.exe
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\bin\Debug\MatrixTools.Demonstration.pdb
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\bin\Debug\MatrixTools.dll
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\bin\Debug\MatrixTools.pdb
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\obj\Debug\MatrixTools.Demonstration.exe
-C:\Users\dquackenbush2019\Documents\Visual Studio 2015\Projects\MatrixTools\MatrixTools.Demonstration\obj\Debug\MatrixTools.Demonstration.pdb
