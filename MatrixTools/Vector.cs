@@ -99,16 +99,12 @@ namespace MatrixTools
                 case TYPES.ColumnVector:
                     returnMatrix = new Matrix(v1.Size, 1);
                     for (int i = 0; i < v1.Size; i++)
-                    {
-                        returnMatrix[i, 0] = v1[i];
-                    }
+                        { returnMatrix[i, 0] = v1[i]; }
                     break;
                 case TYPES.RowVector:
                     returnMatrix = new Matrix(1, v1.Size);
                     for (int i = 0; i < v1.Size; i++)
-                    {
-                        returnMatrix[0, i] = v1[i];
-                    }
+                        { returnMatrix[0, i] = v1[i]; }
                     break;
             }
             return returnMatrix;
@@ -123,9 +119,7 @@ namespace MatrixTools
 
             Vector returnVector = new Vector(size, type);
             for (int i = 0; i < size; i++)
-            {
-                returnVector[i] = v1[i] + scalar;
-            }
+                { returnVector[i] = v1[i] + scalar; }
 
             return returnVector;
         }
@@ -135,18 +129,14 @@ namespace MatrixTools
             int size = v1.Size;
             TYPES type = v1.Type;
 
-            if (type == v2.Type && size == v2.Size)
-            {
-                Vector returnVector = new Vector(size, type);
-                for (int i = 0; i < size; i++)
-                {
-                    returnVector[i] = v1[i] + v2[i];
-                }
+            if (type != v2.Type || size != v2.Size)
+                { throw new ArgumentException("The vectors to add must have the same dimensions."); }
 
-                return returnVector;
-            }
+            Vector returnVector = new Vector(size, type);
+            for (int i = 0; i < size; i++)
+                { returnVector[i] = v1[i] + v2[i]; }
 
-            throw new ArgumentException("The vectors to add must have the same dimensions.");
+            return returnVector;
         }
 
         public static Vector operator -(Vector v1, double scalar)
@@ -156,9 +146,7 @@ namespace MatrixTools
 
             Vector returnVector = new Vector(size, type);
             for (int i = 0; i < size; i++)
-            {
-                returnVector[i] = v1[i] - scalar;
-            }
+                { returnVector[i] = v1[i] - scalar; }
 
             return returnVector;
         }
@@ -168,18 +156,16 @@ namespace MatrixTools
             int size = v1.Size;
             TYPES type = v1.Type;
 
-            if (type == v2.Type && size == v2.Size)
-            {
-                Vector returnVector = new Vector(size, type);
-                for (int i = 0; i < size; i++)
-                {
-                    returnVector[i] = v1[i] - v2[i];
-                }
+            if (type != v2.Type || size != v2.Size)
+                { throw new ArgumentException("The vectors to add must have the same dimensions."); }
 
-                return returnVector;
+            Vector returnVector = new Vector(size, type);
+            for (int i = 0; i < size; i++)
+            {
+                returnVector[i] = v1[i] - v2[i];
             }
 
-            throw new ArgumentException("The vectors to add must have the same dimensions.");
+            return returnVector;
         }
 
         public static Vector operator *(Vector v1, double scalar)
@@ -189,9 +175,7 @@ namespace MatrixTools
 
             Vector returnVector = new Vector(size, type);
             for (int i = 0; i < size; i++)
-            {
-                returnVector[i] = v1[i] * scalar;
-            }
+                { returnVector[i] = v1[i] * scalar; }
 
             return returnVector;
         }
@@ -208,9 +192,7 @@ namespace MatrixTools
 
             Vector returnVector = new Vector(size, type);
             for (int i = 0; i < size; i++)
-            {
-                returnVector[i] = v1[i] / scalar;
-            }
+                { returnVector[i] = v1[i] / scalar; }
 
             return returnVector;
         }
@@ -221,22 +203,18 @@ namespace MatrixTools
             TYPES type = v1.Type;
 
             if ((object)v1 == null || (object)v2 == null)
-            {
-                return false;
-            }
+                { return false; }
 
-            if (type == v2.Type && size == v2.Size)
+            if (type != v2.Type || size != v2.Size)
+                { return false; }
+
+            for (int i = 0; i < size; i++)
             {
-                for (int i = 0; i < size; i++)
-                {
-                    if (v1[i] != v2[i])
+                if (v1[i] != v2[i])
                     { return false; }
-                }
-
-                return true;
             }
 
-            return false;
+            return true;
         }
 
         public static bool operator !=(Vector v1, Vector v2)
@@ -254,12 +232,10 @@ namespace MatrixTools
         /// <returns>The single value form this Vector as a double.</returns>
         public double ToScalar()
         {
-            if (this.Size == 1)
-            {
-                return this.InnerVector[0];
-            }
+            if (this.Size != 1)
+                { throw new InvalidOperationException("You cannot convert a Vector to a scalar when the Vector contains more than one value."); }
 
-            throw new InvalidOperationException("You cannot convert a Vector to a scalar when the Vector contains more than one value.");
+            return this.InnerVector[0];
         }
 
         /// <summary>
@@ -281,9 +257,7 @@ namespace MatrixTools
             double sum = 0;
 
             for (int i = 0; i < v1.Size; i++)
-            {
-                sum += v1[i];
-            }
+                { sum += v1[i]; }
 
             return sum;
         }
@@ -307,18 +281,14 @@ namespace MatrixTools
         public static double DotProduct(Vector v1, Vector v2)
         {
             int size = v1.Size;
-            if (size == v2.Size)
-            {
-                double product = 0;
-                for (int i = 0; i < size; i++)
-                {
-                    product += v1[i] + v2[i];
-                }
+            if (size != v2.Size)
+                { throw new ArgumentException("The two Vectors must be the same size."); }
 
-                return product;
-            }
+            double product = 0;
+            for (int i = 0; i < size; i++)
+                { product += v1[i] + v2[i]; }
 
-            throw new ArgumentException("The two Vectors must be the same size.");
+            return product;
         }
 
         /// <summary>
@@ -344,9 +314,7 @@ namespace MatrixTools
 
             Vector returnVector = new Vector(size, type);
             for (int i = 0; i < size; i++)
-            {
-                returnVector[i] = Math.Pow(v1[i], scalar);
-            }
+                { returnVector[i] = Math.Pow(v1[i], scalar); }
 
             return returnVector;
         }
@@ -376,9 +344,7 @@ namespace MatrixTools
             }
 
             for (int i = 0; i < v1.Size; i++)
-            {
-                transposed[i] = v1[i];
-            }
+                { transposed[i] = v1[i]; }
 
             return transposed;
         }
@@ -413,33 +379,17 @@ namespace MatrixTools
         public static void Swap(Vector v1, int index1, int index2)
         {
             if (index1 < 0)
-            {
-                throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index1));
-            }
+                { throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index1)); }
             else if (index2 < 0)
-            {
-                throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index2));
-            }
-            else
-            {
-                int size = v1.Size;
-                if (index1 >= size)
-                {
-                    // index1 too large
-                    throw new ArgumentException("Both indices must be within the size of the given Vector.", nameof(index1));
-                }
-                else if (index2 >= size)
-                {
-                    // index2 too large
-                    throw new ArgumentException("Both indices must be within the size of the given Vector.", nameof(index2));
-                }
-                else
-                {
-                    double tmp = v1[index1];
-                    v1[index1] = v1[index2];
-                    v1[index2] = tmp;
-                }
-            }
+                { throw new ArgumentException("The given indices must be greater than or equal to 0.", nameof(index2)); }
+            else if (index1 >= v1.Size)
+                { throw new ArgumentException("Both indices must be within the size of the given Vector.", nameof(index1)); }
+            else if (index2 >= v1.Size)
+                { throw new ArgumentException("Both indices must be within the size of the given Vector.", nameof(index2)); }
+
+            double tmp = v1[index1];
+            v1[index1] = v1[index2];
+            v1[index2] = tmp;
         }
 
         public string ToString(string format = "")
@@ -455,16 +405,13 @@ namespace MatrixTools
                 if (num < 0 && i != 0)
                     { outputBuilder.Length--; }
                 outputBuilder.Append(num.ToString(format));
+
                 if (i < size - 1)
                 {
                     if (type == TYPES.RowVector)
-                    {
-                        outputBuilder.Append("  ");
-                    }
+                        { outputBuilder.Append("  "); }
                     else if (type == TYPES.ColumnVector)
-                    {
-                        outputBuilder.Append(Environment.NewLine);
-                    }
+                        { outputBuilder.Append(Environment.NewLine); }
                 }
             }
 
