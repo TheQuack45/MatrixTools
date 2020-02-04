@@ -151,5 +151,81 @@ namespace MatrixTools.Tests
             // Assertion fails if you don't round, but I don't have more digits from Octave because I'm incompetent.
             Assert.AreEqual(-0.019226, Math.Round(result, 6));
         }
+
+        [Test]
+        public static void TestMatrixCopy()
+        {
+            Matrix testMatrix = new Matrix(2, 2);
+            testMatrix[0, 0] = 0.232580;
+            testMatrix[0, 1] = 0.980771;
+            testMatrix[1, 0] = 0.030324;
+            testMatrix[1, 1] = 0.045210;
+
+            Matrix testMatrixCopy = testMatrix.Copy();
+
+            Assert.False(object.ReferenceEquals(testMatrix, testMatrixCopy));
+            Assert.AreEqual(testMatrix.Rows, testMatrixCopy.Rows);
+            Assert.AreEqual(testMatrix.Columns, testMatrixCopy.Columns);
+            Assert.AreEqual(testMatrix[0, 0], testMatrixCopy[0, 0]);
+            Assert.AreEqual(testMatrix[0, 1], testMatrixCopy[0, 1]);
+            Assert.AreEqual(testMatrix[1, 0], testMatrixCopy[1, 0]);
+            Assert.AreEqual(testMatrix[1, 1], testMatrixCopy[1, 1]);
+        }
+
+        [Test]
+        public static void TestStaticMatrixCopy()
+        {
+            Matrix testMatrix = new Matrix(2, 2);
+            testMatrix[0, 0] = 0.232580;
+            testMatrix[0, 1] = 0.980771;
+            testMatrix[1, 0] = 0.030324;
+            testMatrix[1, 1] = 0.045210;
+
+            Matrix testMatrixCopy = Matrix.Copy(testMatrix);
+
+            Assert.False(object.ReferenceEquals(testMatrix, testMatrixCopy));
+            Assert.AreEqual(testMatrix.Rows, testMatrixCopy.Rows);
+            Assert.AreEqual(testMatrix.Columns, testMatrixCopy.Columns);
+            Assert.AreEqual(testMatrix[0, 0], testMatrixCopy[0, 0]);
+            Assert.AreEqual(testMatrix[0, 1], testMatrixCopy[0, 1]);
+            Assert.AreEqual(testMatrix[1, 0], testMatrixCopy[1, 0]);
+            Assert.AreEqual(testMatrix[1, 1], testMatrixCopy[1, 1]);
+        }
+
+        [Test]
+        public static void TestVectorCopy()
+        {
+            Vector testVector = new Vector(3, Vector.TYPES.RowVector);
+            testVector[0] = 3;
+            testVector[1] = 16;
+            testVector[2] = -7;
+
+            Vector testVectorCopy = testVector.Copy();
+
+            Assert.False(object.ReferenceEquals(testVector, testVectorCopy));
+            Assert.AreEqual(testVector.Size, testVectorCopy.Size);
+            Assert.AreEqual(testVector.Type, testVectorCopy.Type);
+            Assert.AreEqual(testVector[0], testVectorCopy[0]);
+            Assert.AreEqual(testVector[1], testVectorCopy[1]);
+            Assert.AreEqual(testVector[2], testVectorCopy[2]);
+        }
+
+        [Test]
+        public static void TestStaticVectorCopy()
+        {
+            Vector testVector = new Vector(3, Vector.TYPES.RowVector);
+            testVector[0] = 3;
+            testVector[1] = 16;
+            testVector[2] = -7;
+
+            Vector testVectorCopy = Vector.Copy(testVector);
+
+            Assert.False(object.ReferenceEquals(testVector, testVectorCopy));
+            Assert.AreEqual(testVector.Size, testVectorCopy.Size);
+            Assert.AreEqual(testVector.Type, testVectorCopy.Type);
+            Assert.AreEqual(testVector[0], testVectorCopy[0]);
+            Assert.AreEqual(testVector[1], testVectorCopy[1]);
+            Assert.AreEqual(testVector[2], testVectorCopy[2]);
+        }
     }
 }
