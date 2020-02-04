@@ -392,6 +392,32 @@ namespace MatrixTools
             v1[index2] = tmp;
         }
 
+        /// <summary>
+        /// Returns a shallow copy of this Vector.
+        /// </summary>
+        /// <returns><code>Vector</code> A shallow copy of this.</returns>
+        public Vector Copy()
+        {
+            return Vector.Copy(this);
+        }
+
+        /// <summary>
+        /// Returns a shallow copy of the given Vector.
+        /// </summary>
+        /// <param name="v1"><code>Vector</code> The Vector to duplicate.</param>
+        /// <returns><code>Vector</code> A shallow copy of v1.</returns>
+        public static Vector Copy(Vector v1)
+        {
+            Vector copy = new Vector(v1.Size, v1.Type);
+
+            for (int ci = 0; ci < v1.Size; ci++)
+            {
+                copy[ci] = v1[ci];
+            }
+
+            return copy;
+        }
+
         public string ToString(string format = "")
         {
             // TODO: Docs and unit test for this

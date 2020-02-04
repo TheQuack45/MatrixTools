@@ -993,6 +993,38 @@ namespace MatrixTools
         }
 
         /// <summary>
+        /// Returns a shallow copy of this Matrix.
+        /// </summary>
+        /// <returns><code>Matrix</code> A shallow copy of this.</returns>
+        public Matrix Copy()
+        {
+            return Matrix.Copy(this);
+        }
+
+        /// <summary>
+        /// Returns a shallow copy of the given Matrix.
+        /// </summary>
+        /// <param name="m1"><code>Matrix</code> The Matrix to duplicate.</param>
+        /// <returns><code>Matrix</code> A shallow copy of m1.</returns>
+        public static Matrix Copy(Matrix m1)
+        {
+            if ((object)m1 == null)
+                { throw new ArgumentNullException(nameof(m1), "The given matrix cannot be null."); }
+
+            Matrix copy = new Matrix(m1.Rows, m1.Columns);
+
+            for (int cRow = 0; cRow < m1.Rows; cRow++)
+            {
+                for (int cCol = 0; cCol < m1.Columns; cCol++)
+                {
+                    copy[cRow, cCol] = m1[cRow, cCol];
+                }
+            }
+
+            return copy;
+        }
+
+        /// <summary>
         /// Converts this Matrix to a string with each element being formatted using Double.Format using the given format string.
         /// If no format string is given, the default formatting is used.
         /// </summary>
